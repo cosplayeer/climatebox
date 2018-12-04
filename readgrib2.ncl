@@ -5,6 +5,7 @@ v10 = a->10V_GDS0_SFC_S123
 
 lat = a->g0_lat_1
 lon = a->g0_lon_2
+
 speed10 = a->10SI_GDS0_SFC_S123
 time0 = a->initial_time0_hours
 utc_date_1=cd_calendar(time0,-1)
