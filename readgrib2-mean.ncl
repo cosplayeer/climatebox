@@ -1,4 +1,5 @@
-a=addfile("2017SFCMonthly.grib","r")
+;a=addfile("2017SFCMonthly.grib","r")
+a=addfile("/home/meso/DYP/scripts/secret/climatedownload/data/ERA-InterimMonthlySFC_2017.grb","r")
 ;[initial_time0_hours | 12] x [g0_lat_1 | 241] x [g0_lon_2 | 480]
 u10 = a->10U_GDS0_SFC_S123
 v10 = a->10V_GDS0_SFC_S123

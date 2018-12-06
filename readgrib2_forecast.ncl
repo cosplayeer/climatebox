@@ -1,27 +1,51 @@
+; test data
 ; a=addfile("2017SFCMonthly.grib","r")
-a=addfile("/home/meso/DYP/scripts/secret/climatedownload/data/ERA-InterimMonthlySFC_2017.grb","r")
-;[initial_time0_hours | 12] x [g0_lat_1 | 241] x [g0_lon_2 | 480]
-u10 = a->10U_GDS0_SFC_S123
-v10 = a->10V_GDS0_SFC_S123
+;history data
+; a=addfile("/home/meso/DYP/scripts/secret/climatedownload/data/ERA-InterimMonthlySFC_2017.grb","r")
+;forecast data
+a=addfile("/home/meso/DYP/climatedata/adaptor.mars.external-201710-6month.grib","r")
+;[ensemble0 | 51] x [forecast_time1 | 6] x [g0_lat_2 | 181] x [g0_lon_3 | 360]
+u10 = a->10U_GDS0_SFC
+v10 = a->10V_GDS0_SFC
+speed10 = a->10SI_GDS0_SFC
 
-lat = a->g0_lat_1
-lon = a->g0_lon_2
+u10_51 = dim_avg_n_Wrap(u10,0)
+v10_51 = dim_avg_n_Wrap(v10,0)
+speed10_51 = dim_avg_n_Wrap(speed10,0)
 
-speed10 = a->10SI_GDS0_SFC_S123
-time0 = a->initial_time0_hours
+;member1
+member1 = 50
+u10_m1 = a->10U_GDS0_SFC(member1,:,:,:)
+v10_m1 = a->10V_GDS0_SFC(member1,:,:,:)
+speed10_m1 = a->10SI_GDS0_SFC(member1,:,:,:)
+
+;lon and lat
+lat = a->g0_lat_2
+lon = a->g0_lon_3
+
+time0 = a->forecast_time1
+time0@units = "hours since 2017-09-01 00:00:00"
 utc_date_1=cd_calendar(time0,-1)
 ; spd10_temp = sqrt(u10 * u10 + v10 * v10) ; spd10_temp is less than speed10.
 ; print(spd10_temp(0,1,1))
 inumber = dimsizes(utc_date_1)
-i = 0
-i = 9
-do while i .le. 9 ;inumber -1
+i = 0 ;10 month
+do while i .le. 0 ;inumber -1
 ; do while i .le. inumber - 1
-    utemp = u10(i,:,:)
-    vtemp = v10(i,:,:)
-    sptemp = speed10(i,:,:)
+; single option
+    utemp = u10_m1(i,:,:)
+    vtemp = v10_m1(i,:,:)
+    sptemp = speed10_m1(i,:,:)
 
-    wks = gsn_open_wks("png", "vector_map" + utc_date_1(i))
+; average option
+    ; utemp = u10_51(i,:,:)
+    ; vtemp = v10_51(i,:,:)
+    ; sptemp = speed10_51(i,:,:)
+
+; single option
+    wks = gsn_open_wks("png", "vector_map_forecast_member_"+ member1+ "_" + utc_date_1(i))
+; average option
+    ; wks = gsn_open_wks("png", "vector_map_forecast_average" + utc_date_1(i))
 
     cnres                   =  True              ; contour/map resources
     vcres                   =  True              ; vector resources
@@ -56,8 +80,8 @@ do while i .le. 9 ;inumber -1
   vcres@gsnRightString    = ""
 
 ;---Add subtitles to contour plot
-  cnres@gsnLeftString     = sptemp@long_name + " (" + sptemp@units + ")"
-  cnres@gsnRightString    = "Wind (" + utemp@units + ")"
+  cnres@gsnLeftString     = sptemp@long_name + " of member "+ member1 + " (" + sptemp@units + ")"
+  cnres@gsnRightString    = "wind (" + utemp@units + ")"
     ; res@mpFillOn     = False
     ; res@mpOutlineOn  = True	              ; turn the map outline on
     ; res@gsnDraw      =  False                   ; do not draw the plot
