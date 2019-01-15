@@ -1,0 +1,12 @@
+MERRA2：0.625*0.5
+lon=fspan(-180,179.375,576)
+lat=fspan(-90, 90,361)
+FNL: 0.25*0.25 
+lon=fspan(0,359.75,1440)
+lat=fspan(-90, 90,721)
+ERA-Interim: 0.75*0.75
+lon=fspan(0,359.25,480)
+lat=fspan(-90, 90,241)
+ERA5: 0.3*0.3
+lon=fspan(0,359.7,1200)
+lat=fspan(-90, 90,601)
