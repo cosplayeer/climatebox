@@ -1,3 +1,5 @@
+#!/bin/python3
+
 #!/usr/bin/env python
 import cdsapi
 
@@ -28,4 +30,4 @@ c.retrieve(
         'format':'grib',
         'system':'5'
     },
-    'download.grib')
+    '../data/seasonal-monthly-download.grib')

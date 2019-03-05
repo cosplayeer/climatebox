@@ -3,15 +3,20 @@ b=addfile("/home/meso/DYP/scripts/secret/climatedownload/data/ERA-InterimMonthly
 
 ;[ensemble0 | 51] x [forecast_time1 | 6] x [g0_lat_2 | 181] x [g0_lon_3 | 360]
 speed10 = a->10SI_GDS0_SFC
+printVarSummary(speed10)
+print(a)
+;print(speed10)
 speed10_51 = dim_avg_n_Wrap(speed10, 0)
-speed10_51_sep = speed10_51(9,:,:)
+;speed10_51_sep = speed10_51(9,:,:)
 
 speed10b = b->10SI_GDS0_SFC_S123
+printVarSummary(speed10b)
 ;[initial_time0_hours | 12] x [g0_lat_1 | 241] x [g0_lon_2 | 480]
-speed10b_sep = speed10(9,:,:)
-lat = a->g0_lat_1
-lon = a->g0_lon_2
+;speed10b_sep = speed10(9,:,:)
+lat = a->g0_lat_2
+lon = a->g0_lon_3
 time0 = a->initial_time0_hours
+;exit
 speed10Clm = clmMonTLL(speed10)
 ; printVarSummary(speed10Clm) ;time, l, l
 speed10ClmAvg = dim_avg_n(speed10Clm, 0)
