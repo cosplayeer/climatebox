@@ -34,9 +34,9 @@ z =fi->z
 ; plotting parameters
 ;************************************************
  wks   = gsn_open_wks ("pdf","ght-ne_meshfill")        ; open workstation
-; gsn_define_colormap(wks,"BlueDarkRed18") 
+; gsn_define_colormap(wks"BlueDarkRed18") 
  gsn_define_colormap(wks,"ncl_default") 
-; plot = new(2,graphic)                       ; create a plot array
+; plot = new(2graphic)                       ; create a plot array
   
 
   res                     = True            ; plot mods desired
@@ -62,8 +62,8 @@ z =fi->z
 ; res@mpFillOn    = False
   res@mpFillOn                = True 
   res@mpLimitMode       = "Corners"            ; choose range of map
-  res@mpLeftCornerLatF  = 30
-  res@mpLeftCornerLonF  = 110
+  res@mpLeftCornerLatF  = 20 ;30
+  res@mpLeftCornerLonF  = 100; 110
   res@mpRightCornerLatF = 54
   res@mpRightCornerLonF = 135
   
@@ -72,7 +72,7 @@ z =fi->z
  res@mpDataBaseVersion       = "MediumRes"
  res@mpDataSetName           = "Earth..4"
  res@mpAreaMaskingOn         = True
- ;res@mpMaskAreaSpecifiers    = (/"China","Taiwan","Disputed area between India and China","India:Arunachal Pradesh"/)
+ ;res@mpMaskAreaSpecifiers    = (/"China""Taiwan","Disputed area between India and China","India:Arunachal Pradesh"/)
  res@mpMaskAreaSpecifiers    = (/"China"/)
  res@mpLandFillColor         = "white"
  res@mpInlandWaterFillColor  = "white"
@@ -97,46 +97,73 @@ z =fi->z
 
 ;res@tiMainString  = "CN05.1_Tm_025_daily 1961-2012 "   ; title
 ;res@cnLevelSelectionMode = "ExplicitLevels"
-;res@cnLevels             = (/5,10,15,20,25,30,35,40/)
-;res@cnFillColors = (/10,30,50,70,120,150,190,220,240/)
+;res@cnLevels             = (/510,15,20,25,30,35,40/)
+;res@cnFillColors = (/1030,50,70,120,150,190,220,240/)
 
   res@pmLabelBarHeightF   = 0.05
   res@pmLabelBarOrthogonalPosF = 0.18
   res@tmXBLabelFontHeightF = 0.02 
   res@tmYLLabelFontHeightF = 0.02 
   res@lbLabelFontHeightF= 0.02
-  ;res@pmTickMarkDisplayMode = "Always"   ;;;;;;;×Ô¶¯ÉèÖÃ¾­Î³¶È¹Øµô²ÅÄÜÊ¹ÓÃÏÂÃæµÄÃüÁî
+  ;res@pmTickMarkDisplayMode = "Always"   ;;;;;;;ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½Ã¾ï¿½Î³ï¿½È¹Øµï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
    res@tmYROn     = False
    res@tmYLMode   = "Explicit"
-   res@tmYLValues = (/40,45,50,55/)
-   res@tmYLLabels = (/"40~S~o~N~N","45~S~o~N~N","50~S~o~N~N","55~S~o~N~N"/)
+  ; LYP source
+  ;  res@tmYLValues = (/40,45,50,55/)
+  ;  res@tmYLLabels = (/"40~S~o~N~N","45~S~o~N~N","50~S~o~N~N","55~S~o~N~N"/)
+  ;  res@tmXTOn     = False
+  ;  res@tmXBMode   = "Explicit"
+  ;  res@tmXBValues = (/115,120,125,130,135/)
+  ;  res@tmXBLabels = (/"115~S~o~N~E","120~S~o~N~E","125~S~o~N~E","130~S~o~N~E", \
+  ;                    "135~S~o~N~E"/)           
+  ; DYP changed
+   res@tmYLValues = (/20, 25, 30, 35, 40,45, 50, 55/)
+   res@tmYLLabels = (/"20~S~o~N~N","25~S~o~N~N","30~S~o~N~N","35~S~o~N~N","40~S~o~N~N","45~S~o~N~N","50~S~o~N~N","55~S~o~N~N"/)
    res@tmXTOn     = False
    res@tmXBMode   = "Explicit"
-   res@tmXBValues = (/115,120,125,130,135/)
-   res@tmXBLabels = (/"115~S~o~N~E", "120~S~o~N~E","125~S~o~N~E","130~S~o~N~E", \
-                     "135~S~o~N~E"/)           
-         
+   res@tmXBValues = (/100, 105, 110 ,115,120,125,130,135/)
+   res@tmXBLabels = (/"100~S~o~N~E","105~S~o~N~E","110~S~o~N~E","115~S~o~N~E","120~S~o~N~E","125~S~o~N~E","130~S~o~N~E", \
+                     "135~S~o~N~E"/) 
   plot = gsn_csm_contour_map(wks,z,res)
   cnres            =   True
+; lyp mark version
+;  stainfo =  asciiread("lon-lat-22.txt"(/1,3/),"float")
+;  zno=tostring(toint(stainfo(:0)))
+;  zlon=stainfo(:2)
+;  zlat=stainfo(:1)
+;  print(zlon)
+;  mkres = True
+;  mkres@gsMarkerSizeF = 0.010 ;
+;  mkres@gsMarkerColor = "black"
+;  mkres@gsMarkerIndex = 16
+;  dum = gsn_add_polymarker(wksplot,zlon,zlat,mkres)
+; DYP mark version
+  mkres                   = True
+  mkres@gsMarkerIndex     = 16         ; 16=filled dot
+  mkres@gsMarkerSizeF     = 0.007 ;0.007
+  mkres@gsMarkerColor       = "black"
+;
+; If you call gsn_add_polymarker multiple times use
+; a unique variable each time on the left side of
+; the "=" sign. Or use an array for "dum".
+;
+lat0 = (/41.37215,41.28,41.32,41.36,41.3,41.34,21.72333333,30.12027778,30.06416667,31.43805556,30.0975,31.4725,41.74916667,41.85833333,41.84138889,38.00972222,38.15277778/)
+lon0 = (/115.3,115.3,115.4,115.4,115.3,115.4,107.9516667,108.9263889,108.8594444,114.4341667,108.8908333,114.4236111,116.3630556,116.4405556,116.2763889,117.1233333,117.1869444/)
+print(dimsizes(lat0))
+print(dimsizes(lon0))
+printMinMax(lat0, True)
+printMinMax(lon0, True)
+  ;  lat = (/45/)     ; 1D array of latitude values
+  ;  lon = (/120/)     ; 1D array of longitude values
 
- stainfo =  asciiread("lon-lat-22.txt",(/1,3/),"float")
- zno=tostring(toint(stainfo(:,0)))
- zlon=stainfo(:,2)
- zlat=stainfo(:,1)
- print(zlon)
- mkres = True
- mkres@gsMarkerSizeF = 0.010 ;
- mkres@gsMarkerColor = "black"
- mkres@gsMarkerIndex = 16
- dum = gsn_add_polymarker(wks,plot,zlon,zlat,mkres)
-
+ dum = gsn_add_polymarker(wks,plot,lon0,lat0,mkres)
 
 ;   cnres@china      =   True
 ;   cnres@river      =   True
 ;   cnres@province   =   False
 ;   cnres@nanhai     =   False;True 
 ;   cnres@diqu       =   False
-;chinamap1        =   add_china_map(wks,plot(0),cnres)
+;chinamap1        =   add_china_map(wksplot(0),cnres)
 ;************************************************
 ;***************************************************** 
   
