@@ -28,7 +28,7 @@ def run():
         {
             'product_type':'monthly_averaged_reanalysis',
             'variable':[
-                '10m_u_component_of_wind'
+                '10m_u_component_of_wind','10m_v_component_of_wind','2m_temperature','surface_pressure'
             ],
             #'year':2016,
             #'month':01,
