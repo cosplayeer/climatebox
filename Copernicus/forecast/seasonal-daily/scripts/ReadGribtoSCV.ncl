@@ -1,22 +1,40 @@
 ; parameters:
-fouttime = "201812-201902"
+;---------------done---------------
+; data 0
+;fouttime = "201812-201902"
+;timestring = "hours since 2018-12-01 00:00:0.0"
+;---------------todo---------------
+; data 1
+fouttime = "201901-201903"
+timestring = "hours since 2019-01-01 00:00:0.0"
+;---------------done---------------
+; data 2
+;fouttime = "201902-201904"
+;timestring = "hours since 2019-02-01 00:00:0.0"
+; data 3
+;----------to do, downloading-------
+;fouttime = "201903-201905"
+;timestring = "hours since 2019-03-01 00:00:0.0"
 ; readin
-fname = "../data/adaptor.mars.ForecastWindDaily201812-201902-sfc.grib"
+fname = "../data/adaptor.mars.ForecastWindDaily" + fouttime + "-sfc.grib"
 
 a = addfile(fname, "r")
+printVarSummary(a)
 ; [ensemble0 | 51] x [forecast_time1 | 91] x [g0_lat_2 | 181] x [g0_lon_3 | 360]
 U10 = a->10U_GDS0_SFC(:,:,::-1,:)
 V10 = a->10V_GDS0_SFC(:,:,::-1,:)
 Wind10 = a->10FG_GDS0_SFC(:,:,::-1,:)
 ;time1 {
 _time1 = a->forecast_time1
-_time1@units= "hours since 2018-12-01 00:00:0.0"
+;printVarSummay(_time1)
+_time1@units= timestring
 time1 = cd_calendar(_time1, -2)
 print(time1)
 ;}
 ;time4{
 _time4 = a->forecast_time4
-_time4@units= "hours since 2018-12-01 00:00:0.0"
+;printVarSummay(_time4)
+_time4@units= timestring
 time4 = cd_calendar(_time4, -3)
 print(time4)
 ;}
