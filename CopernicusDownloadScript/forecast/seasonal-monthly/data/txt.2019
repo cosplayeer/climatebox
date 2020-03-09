@@ -1,0 +1,98 @@
+ Copyright (C) 1995-2017 - All Rights Reserved
+ University Corporation for Atmospheric Research
+ NCAR Command Language Version 6.4.0
+ The use of this software is governed by a License Agreement.
+ See http://www.ncl.ucar.edu/ for more details.
+
+Variable: f
+Type: file
+filename:	seasonal-monthly-sfc-2019-01_1
+path:	seasonal-monthly-sfc-2019-01_1.grib
+   file global attributes:
+   dimensions:
+      ensemble0 = 51
+      g0_lat_1 = 181
+      g0_lon_2 = 360
+   variables:
+      float 10FG_GDS0_SFC ( ensemble0, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	10 metre wind gust
+         units :	m s**-1
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	128
+         parameter_number :	49
+         forecast_time :	248
+         forecast_time_units :	3 hours
+         initial_time :	01/01/2019 (00:00)
+
+      float 10U_GDS0_SFC ( ensemble0, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	10 metre U wind component
+         units :	m s**-1
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	128
+         parameter_number :	165
+         forecast_time :	744
+         forecast_time_units :	hours
+         initial_time :	01/01/2019 (00:00)
+
+      float 10V_GDS0_SFC ( ensemble0, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	10 metre V wind component
+         units :	m s**-1
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	128
+         parameter_number :	166
+         forecast_time :	744
+         forecast_time_units :	hours
+         initial_time :	01/01/2019 (00:00)
+
+      float 10SI_GDS0_SFC ( ensemble0, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	10 metre wind speed
+         units :	m s**-1
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	128
+         parameter_number :	207
+         forecast_time :	744
+         forecast_time_units :	hours
+         initial_time :	01/01/2019 (00:00)
+
+      float g0_lat_1 ( g0_lat_1 )
+         long_name :	latitude
+         GridType :	Cylindrical Equidistant Projection Grid
+         units :	degrees_north
+         Dj :	 1
+         Di :	 1
+         Lo2 :	359
+         La2 :	-90
+         Lo1 :	 0
+         La1 :	90
+
+      float g0_lon_2 ( g0_lon_2 )
+         long_name :	longitude
+         GridType :	Cylindrical Equidistant Projection Grid
+         units :	degrees_east
+         Dj :	 1
+         Di :	 1
+         Lo2 :	359
+         La2 :	-90
+         Lo1 :	 0
+         La1 :	90
+
+      string ensemble0_info ( ensemble0 )
+         long_name :	ensemble elements description
+
+      integer ensemble0 ( ensemble0 )
+         long_name :	ensemble indexes
+         units :	non-dim
+
+ 

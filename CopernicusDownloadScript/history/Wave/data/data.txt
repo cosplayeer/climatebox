@@ -1,0 +1,173 @@
+ Copyright (C) 1995-2019 - All Rights Reserved
+ University Corporation for Atmospheric Research
+ NCAR Command Language Version 6.6.2
+ The use of this software is governed by a License Agreement.
+ See http://www.ncl.ucar.edu/ for more details.
+
+Variable: f
+Type: file
+filename:	MonthlyWaveEnsemble201901_201906
+path:	MonthlyWaveEnsemble201901_201906.grib
+   file global attributes:
+   dimensions:
+      ensemble0 = 10
+      initial_time1_hours = 6
+      g0_lat_2 = 181
+      g0_lon_3 = 360
+      g0_lat_4 = 361
+      g0_lon_5 = 720
+   variables:
+      float SWH_GDS0_MSL_S123 ( ensemble0, initial_time1_hours, g0_lat_2, g0_lon_3 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	Significant wave height
+         units :	m
+         _FillValue :	1e+20
+         level_indicator :	102
+         gds_grid_type :	0
+         parameter_table_version :	140
+         parameter_number :	229
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 3 hours)
+         N :	( 248, 224, 248, 240, 248, 240 )
+
+      float SWH_GDS0_MSL_S123_1 ( initial_time1_hours, g0_lat_4, g0_lon_5 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	Significant wave height
+         units :	m
+         _FillValue :	1e+20
+         level_indicator :	102
+         gds_grid_type :	0
+         parameter_table_version :	140
+         parameter_number :	229
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	( 744, 672, 744, 720, 744, 720 )
+
+      float MWD_GDS0_MSL_S123 ( ensemble0, initial_time1_hours, g0_lat_2, g0_lon_3 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	Mean wave direction
+         units :	degrees
+         _FillValue :	1e+20
+         level_indicator :	102
+         gds_grid_type :	0
+         parameter_table_version :	140
+         parameter_number :	230
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 3 hours)
+         N :	( 248, 224, 248, 240, 248, 240 )
+
+      float MWD_GDS0_MSL_S123_1 ( initial_time1_hours, g0_lat_4, g0_lon_5 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	Mean wave direction
+         units :	degrees
+         _FillValue :	1e+20
+         level_indicator :	102
+         gds_grid_type :	0
+         parameter_table_version :	140
+         parameter_number :	230
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	( 744, 672, 744, 720, 744, 720 )
+
+      float MWP_GDS0_MSL_S123 ( ensemble0, initial_time1_hours, g0_lat_2, g0_lon_3 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	Mean wave period
+         units :	s
+         _FillValue :	1e+20
+         level_indicator :	102
+         gds_grid_type :	0
+         parameter_table_version :	140
+         parameter_number :	232
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 3 hours)
+         N :	( 248, 224, 248, 240, 248, 240 )
+
+      float MWP_GDS0_MSL_S123_1 ( initial_time1_hours, g0_lat_4, g0_lon_5 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	Mean wave period
+         units :	s
+         _FillValue :	1e+20
+         level_indicator :	102
+         gds_grid_type :	0
+         parameter_table_version :	140
+         parameter_number :	232
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	( 744, 672, 744, 720, 744, 720 )
+
+      double initial_time1_hours ( initial_time1_hours )
+         long_name :	initial time
+         units :	hours since 1800-01-01 00:00
+
+      double initial_time1_encoded ( initial_time1_hours )
+         long_name :	initial time encoded as double
+         units :	yyyymmddhh.hh_frac
+
+      float g0_lat_4 ( g0_lat_4 )
+         long_name :	latitude
+         GridType :	Cylindrical Equidistant Projection Grid
+         units :	degrees_north
+         Dj :	0.5
+         Di :	0.5
+         Lo2 :	359.5
+         La2 :	-90
+         Lo1 :	 0
+         La1 :	90
+
+      float g0_lon_5 ( g0_lon_5 )
+         long_name :	longitude
+         GridType :	Cylindrical Equidistant Projection Grid
+         units :	degrees_east
+         Dj :	0.5
+         Di :	0.5
+         Lo2 :	359.5
+         La2 :	-90
+         Lo1 :	 0
+         La1 :	90
+
+      float g0_lat_2 ( g0_lat_2 )
+         long_name :	latitude
+         GridType :	Cylindrical Equidistant Projection Grid
+         units :	degrees_north
+         Dj :	 1
+         Di :	 1
+         Lo2 :	359
+         La2 :	-90
+         Lo1 :	 0
+         La1 :	90
+
+      float g0_lon_3 ( g0_lon_3 )
+         long_name :	longitude
+         GridType :	Cylindrical Equidistant Projection Grid
+         units :	degrees_east
+         Dj :	 1
+         Di :	 1
+         Lo2 :	359
+         La2 :	-90
+         Lo1 :	 0
+         La1 :	90
+
+      string initial_time1 ( initial_time1_hours )
+         long_name :	Initial time of first record
+         units :	mm/dd/yyyy (hh:mm)
+
+      string ensemble0_info ( ensemble0 )
+         long_name :	ensemble elements description
+
+      integer ensemble0 ( ensemble0 )
+         long_name :	ensemble indexes
+         units :	non-dim
+
+ 
