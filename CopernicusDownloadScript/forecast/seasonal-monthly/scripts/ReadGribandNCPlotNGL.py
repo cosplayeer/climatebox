@@ -1,14 +1,32 @@
-import numpy as numpy
+import numpy as np
 import Nio
 import Ngl
 
 fname = "data/seasonal-monthly-sfc-2020-02_1-6.grib"
+fname2 = "data2/seasonal-monthly-sfc.nc"
+# fname2 = "data2/12month/seasonal-monthly-sfc-month04.nc"
+#forecast f 
 f = Nio.open_file(fname, mode='r',\
     options = None, format='grib')
-u10 = f.variables['10U_GDS0_SFC']
-v10 = f.variables['10V_GDS0_SFC']
-Wind10 =f.variables['10SI_GDS0_SFC']
+# u10 = f.variables['10U_GDS0_SFC']
+# v10 = f.variables['10V_GDS0_SFC']
+Wind10 =f.variables['10SI_GDS0_SFC'] 
+# avg history f2
+f2 = Nio.open_file(fname2, mode='r',\
+    options = None, format='nc')
+Wind10_avg_20years = f2.variables['Speed'] 
 
+print(Wind10.shape)               #(51, 6, 181, 360)
+print(Wind10_avg_20years.shape)   #(181, 360)
+
+Wind10_ensemble_average = np.average(Wind10, axis=0)
+print(Wind10_ensemble_average.shape[0]) #(6, 181, 360)
+Wind10_ensemble_average_2 = Wind10_ensemble_average
+for i in range(6):
+    Wind10_ensemble_average_2[i,:,:] = (Wind10_ensemble_average[i,:,:] - Wind10_avg_20years) / Wind10_avg_20years * 100
+print(Wind10_ensemble_average_2.shape)
+print(np.max(Wind10_ensemble_average_2))
+print(np.min(Wind10_ensemble_average_2))
 # Access the temperature arrays for the first 6 time steps.
 # 6 x 4
 nplots = 6
@@ -21,7 +39,7 @@ lon = f.variables["g0_lon_3"][:]
 #
 # Define a color map.
 #
-cmap = numpy.array([[1.00,.000,.000],\
+cmap = np.array([[1.00,.000,.000],\
                     [.950,.010,.000],[.870,.050,.000],[.800,.090,.000],\
                     [.700,.090,.000],[.700,.120,.000],[.700,.180,.000],\
                     [.700,.260,.000],[.700,.285,.000],[.680,.330,.000],\
@@ -37,7 +55,8 @@ cmap = numpy.array([[1.00,.000,.000],\
 #--- Indicate where to send graphics
 rlist = Ngl.Resources()
 wks_type = "png"
-wks = Ngl.open_wks(wks_type,"pic/panel3x2",rlist)
+#wks = Ngl.open_wks(wks_type,"pic/Wind10_ensemble_forecast_minus_average",rlist)
+wks = Ngl.open_wks(wks_type,"pic/Wind10_ensemble_forecast_minus_average_percent",rlist)
 
 # Turn off draw for the individual plots, since we are going to
 # panel them later.
@@ -67,8 +86,9 @@ resources.tmXBLabelFontHeightF   = 0.030
 resources.tmYLLabelFontHeightF   = 0.030
 
 for i in range(0,nplots):
-  resources.tiMainString  = "WindSpeed at number = {}".format(i)
-  plot.append(Ngl.contour(wks,Ngl.add_cyclic(Wind10[i,0,:,:]),resources))
+  resources.tiMainString  = "WindSpeed in forecast lead month = {}".format(i)
+  #plot.append(Ngl.contour(wks,Ngl.add_cyclic(Wind10[i,0,:,:]),resources))
+  plot.append(Ngl.contour(wks,Ngl.add_cyclic(Wind10_ensemble_average_2[i,:,:]),resources))
 
 # Ngl.panel(wks,plot[0:4],[2,2])    # Draw 2 rows/2 columns of plots.
 
@@ -92,9 +112,9 @@ resources.cnLineLabelsOn = False   # Turn off contour line labels.
 resources.cnLinesOn      = False   # Turn off contour lines.
 resources.cnFillOn       = True    # Turn on contour fill.
 
-resources.cnLevelSelectionMode = "ManualLevels"  # Select contour levels.
-resources.cnMinLevelValF       = 0.
-resources.cnMaxLevelValF       = 18
+resources.cnLevelSelectionMode = "AutomaticLevels"  #ManualLevels" # Select contour levels.
+resources.cnMinLevelValF       = -1.5
+resources.cnMaxLevelValF       = 12
 resources.cnLevelSpacingF      =   2.5
 
 resources.tmXBLabelFontHeightF   = 0.020
@@ -115,7 +135,9 @@ resources.mpGridAndLimbOn = False           # Turn off map grid.
 
 plot = []
 for i in range(0,nplots):
-  plot.append(Ngl.contour_map(wks,Ngl.add_cyclic(Wind10[i,3,:,:]),resources))
+  #plot.append(Ngl.contour_map(wks,Ngl.add_cyclic(Wind10[i,0,:,:]),resources))
+  plot.append(Ngl.contour_map(wks,Ngl.add_cyclic(Wind10_ensemble_average_2[i,:,:]),resources))
+  
 
 # Set some resources for the paneled plots.
 #
@@ -133,7 +155,7 @@ panelres.nglPanelLabelBarHeightF          = 0.10   #0.1750   # Height of labelba
 panelres.nglPanelLabelBarWidthF           = 0.700    # Width of labelbar
 panelres.lbLabelFont                      = "helvetica-bold" # Labelbar font
 panelres.nglPanelTop                      = 0.935
-panelres.nglPanelFigureStrings            = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N",
+panelres.nglPanelFigureStrings            = ["3","4","5","6","7","8","G","H","I","J","K","L","M","N",
                                              "O","P","Q","R","S","T","U","V","W","X"]
 panelres.nglPanelFigureStringsJust        = "BottomRight"
 
@@ -157,5 +179,5 @@ Ngl.panel(wks,plot[0:nplots],[3,2],panelres)
 
 Ngl.end()
 
-print(Wind10)
+print(Wind10_ensemble_average_2.shape)
 

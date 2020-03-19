@@ -2,3 +2,4 @@ grpc
 *.swp
 *.grib
 *nc
+*.csv
