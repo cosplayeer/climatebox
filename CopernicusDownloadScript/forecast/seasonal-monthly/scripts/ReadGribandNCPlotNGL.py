@@ -11,6 +11,7 @@ f = Nio.open_file(fname, mode='r',\
 # u10 = f.variables['10U_GDS0_SFC']
 # v10 = f.variables['10V_GDS0_SFC']
 Wind10 =f.variables['10SI_GDS0_SFC'] 
+print(Wind10)
 # avg history f2
 f2 = Nio.open_file(fname2, mode='r',\
     options = None, format='nc')
