@@ -3,3 +3,4 @@ grpc
 *.grib
 *nc
 *.csv
+*.tar
