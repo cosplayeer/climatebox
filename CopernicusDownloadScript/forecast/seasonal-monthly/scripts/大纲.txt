@@ -18,7 +18,7 @@ scripts:
             - 读取历史多年平均资料
                     2.1 seasonal average  OK
                     2.1* ERA5             todo
--  Plot scripts
+-  Plot script
 -  生成文本数据 
 -  todo: 
     - 读取ＥＲＡ５资料
@@ -29,22 +29,23 @@ scripts:
 3，画多张图
 4.完成      OK
 
-海洋集合预报月平均：
-1. 读取     OK
-2. 画一张图    
-3，画多张图
-4.完成
-
-海洋集合预报每日：
-1. 读取     OK
-2. 画一张图    
-3，画多张图
-4.完成
-
 季节预报逐月：
 １．　读取 ing
 ２．　处理
 ３．　输出ｃｓｖ
+
+每个月与历史２０年月平均资料点差值图，１０ｍ风速＿ｕｖ
+１．处理数据，提取风速变量
+ReadEnsembles.py　　　-->data2
+２．得到每个月点多年平均ｎｃ资料
+ReadEnsembles_2_avg_monthly.sh -->data2/12month,需重命名
+３．画图
+    3.1 逐月平均图
+    ReadGribandNCPlotNGLeverymonth.py
+    python3 scripts/ReadGribandNCPlotNGL_Wind10_ensemble_average_forecast.py
+    3.２ ３月份点预报与逐月平均图插值图
+    3.３ ３月份点预报与逐月平均图插值图百分比
+        python3 scripts/ReadGribandNCPlotNGLeverymonth.py 结果总数很夸张
 
 
 todo:
@@ -55,9 +56,17 @@ todo:
 　　３. 出文本 
 １．２　季节预报多年平均
 2. 最新三个月与多年平均对比图           OK
-3. 最新三个月与多年历史同月份对比图．    OK
+3. 最新三个月与多年历史同月份对比图．     OK
 4. 时间序列图
 Gif 图
 1. 单张
 2. 集合
     ReadGribPlotPanelNGL.py
+
+todo new:
+1. 2020年３月２５日对４月预报－ＥＲＡ５历史多年平均
+    １．　读取预报
+    ２．　插值到０．２５
+    ３．　读取ＥＲＡ５
+    ４．　ｔｏｄｏ
+２. 2020年３月２５日对４，５，６月预报－ＥＲＡ５历史多年平均

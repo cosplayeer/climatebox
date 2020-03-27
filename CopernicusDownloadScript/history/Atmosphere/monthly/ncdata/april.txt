@@ -1,0 +1,89 @@
+ Copyright (C) 1995-2017 - All Rights Reserved
+ University Corporation for Atmospheric Research
+ NCAR Command Language Version 6.4.0
+ The use of this software is governed by a License Agreement.
+ See http://www.ncl.ucar.edu/ for more details.
+
+Variable: f
+Type: file
+filename:	ERA5-wind-april-20year-average
+path:	ERA5-wind-april-20year-average.nc
+   file global attributes:
+   dimensions:
+      g0_lat_1 = 721
+      g0_lon_2 = 1440
+   variables:
+      float Speed10m ( g0_lat_1, g0_lon_2 )
+         initial_time0_hours :	1746552
+         average_op_ncl :	dim_avg_n over dimension(s): ncl_join
+         N :	<ARRAY of 12 elements>
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         statistical_process_descriptor :	average of N uninitialized analyses
+         forecast_time_units :	hours
+         forecast_time :	0
+         parameter_number :	207
+         parameter_table_version :	128
+         gds_grid_type :	0
+         level_indicator :	1
+         units :	m/s
+         long_name :	wind speed origin at 10m monthly april
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         _FillValue :	1e+20
+
+      float g0_lat_1 ( g0_lat_1 )
+         long_name :	latitude
+         GridType :	Cylindrical Equidistant Projection Grid
+         units :	degrees_north
+         Dj :	0.25
+         Di :	0.25
+         Lo2 :	359.75
+         La2 :	-90
+         Lo1 :	 0
+         La1 :	90
+
+      float g0_lon_2 ( g0_lon_2 )
+         long_name :	longitude
+         GridType :	Cylindrical Equidistant Projection Grid
+         units :	degrees_east
+         Dj :	0.25
+         Di :	0.25
+         Lo2 :	359.75
+         La2 :	-90
+         Lo1 :	 0
+         La1 :	90
+
+      float Speed10m_UV ( g0_lat_1, g0_lon_2 )
+         initial_time0_hours :	1746552
+         average_op_ncl :	dim_avg_n over dimension(s): ncl_join
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	wind speed from uv at 10m monthly april
+         units :	m/s
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	128
+         parameter_number :	165
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+         _FillValue :	1e+20
+
+      float Speed100m_UV ( g0_lat_1, g0_lon_2 )
+         initial_time0_hours :	1746552
+         average_op_ncl :	dim_avg_n over dimension(s): ncl_join
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	wind speed from uv at 100m monthly april
+         units :	m/s
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	228
+         parameter_number :	246
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+         _FillValue :	1e+20
+
+ 

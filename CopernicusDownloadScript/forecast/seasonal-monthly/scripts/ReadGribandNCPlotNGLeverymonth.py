@@ -3,7 +3,7 @@ import Nio
 import Ngl
 
 fname = "data/seasonal-monthly-sfc-2020-02_1-6.grib"
-fname2 = "data2/seasonal-monthly-sfc.nc"
+# fname2 = "data2/seasonal-monthly-sfc.nc"
 fname3 = "data2/12month/seasonal-monthly-sfc-month03.nc"
 fname4 = "data2/12month/seasonal-monthly-sfc-month04.nc"
 fname5 = "data2/12month/seasonal-monthly-sfc-month05.nc"
@@ -15,7 +15,11 @@ f = Nio.open_file(fname, mode='r',\
     options = None, format='grib')
 # u10 = f.variables['10U_GDS0_SFC']
 # v10 = f.variables['10V_GDS0_SFC']
-Wind10_forecast =f.variables['10SI_GDS0_SFC'] 
+u10 = f.variables['10U_GDS0_SFC']
+v10 = f.variables['10V_GDS0_SFC']
+# Wind10_forecast =f.variables['10SI_GDS0_SFC'] 
+Wind10_forecast = np.sqrt(np.multiply(u10,u10) + np.multiply(v10,v10))
+print(Wind10_forecast.shape)
 # avg history f2
 # f2 = Nio.open_file(fname2, mode='r',\
 #     options = None, format='nc')
@@ -54,12 +58,16 @@ print(Wind10_ensemble_average.shape[0]) #(6, 181, 360)
 Wind10_ensemble_average_2 = Wind10_ensemble_average
 # for i in range(6):
     # Wind10_ensemble_average_2[i,:,:] = Wind10_ensemble_average[i,:,:] - Wind10_avg_20years
-Wind10_ensemble_average_2[0,:,:] = (Wind10_ensemble_average[0,:,:] - Wind10_avg_03) / Wind10_avg_03
+Wind10_ensemble_average_2[0,:,:] = np.subtract(Wind10_ensemble_average[0,:,:] ,Wind10_avg_03) 
+Wind10_ensemble_average_2[0,:,:] = np.divide(Wind10_ensemble_average_2[0,:,:], Wind10_avg_03)
 Wind10_ensemble_average_2[1,:,:] = (Wind10_ensemble_average[1,:,:] - Wind10_avg_04) / Wind10_avg_04
-Wind10_ensemble_average_2[2,:,:] = (Wind10_ensemble_average[2,:,:] - Wind10_avg_05) / Wind10_avg_05
-Wind10_ensemble_average_2[3,:,:] = (Wind10_ensemble_average[3,:,:] - Wind10_avg_06) / Wind10_avg_06
-Wind10_ensemble_average_2[4,:,:] = (Wind10_ensemble_average[4,:,:] - Wind10_avg_07) / Wind10_avg_07
-Wind10_ensemble_average_2[5,:,:] = (Wind10_ensemble_average[5,:,:] - Wind10_avg_08) / Wind10_avg_08
+# Wind10_ensemble_average_2[1,:,:] =  Wind10_avg_04
+Wind10_ensemble_average_2[2,:,:] = (Wind10_ensemble_average[1,:,:] - Wind10_avg_05) / Wind10_avg_05
+Wind10_ensemble_average_2[3,:,:] = (Wind10_ensemble_average[2,:,:] - Wind10_avg_06) / Wind10_avg_06
+Wind10_ensemble_average_2[4,:,:] = (Wind10_ensemble_average[3,:,:] - Wind10_avg_07) / Wind10_avg_07
+Wind10_ensemble_average_2[5,:,:] = (Wind10_ensemble_average[4,:,:] - Wind10_avg_08) / Wind10_avg_08
+Wind10_ensemble_average_2[0,:,:] = Wind10_ensemble_average_2[2,:,:]
+Wind10_ensemble_average_2[1,:,:] = Wind10_ensemble_average_2[2,:,:]
 # print(Wind10_ensemble_average_2.shape)
 # print(np.max(Wind10_ensemble_average_2))
 # print(np.min(Wind10_ensemble_average_2))
@@ -140,7 +148,7 @@ panelres.nglPanelXWhiteSpacePercent = 5.
 #
 del resources.tiMainString  # Don't set a main title.
 
-# resources.cnFillPalette  = cmap # Set color map using RGB values
+resources.cnFillPalette  = cmap # Set color map using RGB values
 resources.sfXArray       = lon  # Portion of map on which to overlay
 resources.sfYArray       = lat  # contour plot.
 
@@ -148,10 +156,10 @@ resources.cnLineLabelsOn = False   # Turn off contour line labels.
 resources.cnLinesOn      = False   # Turn off contour lines.
 resources.cnFillOn       = True    # Turn on contour fill.
 
-resources.cnLevelSelectionMode = "AutomaticLevels" #ManualLevels"  # Select contour levels.
+resources.cnLevelSelectionMode = "ManualLevels" #"AutomaticLevels"   # Select contour levels.
 resources.cnMinLevelValF       = -1.5
-resources.cnMaxLevelValF       = 12
-resources.cnLevelSpacingF      =   2.5
+resources.cnMaxLevelValF       = 1
+resources.cnLevelSpacingF      =   0.1
 
 resources.tmXBLabelFontHeightF   = 0.020
 resources.tmYLLabelFontHeightF   = 0.020

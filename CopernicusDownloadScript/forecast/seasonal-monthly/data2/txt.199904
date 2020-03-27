@@ -1,0 +1,22 @@
+ Copyright (C) 1995-2017 - All Rights Reserved
+ University Corporation for Atmospheric Research
+ NCAR Command Language Version 6.4.0
+ The use of this software is governed by a License Agreement.
+ See http://www.ncl.ucar.edu/ for more details.
+
+Variable: f
+Type: file
+filename:	seasonal-monthly-sfc-ensemble-avg199904
+path:	seasonal-monthly-sfc-ensemble-avg199904.nc
+   file global attributes:
+   dimensions:
+      g0_lat_1 = 181
+      g0_lon_2 = 360
+   variables:
+      float g0_lat_1 ( g0_lat_1 )
+
+      float g0_lon_2 ( g0_lon_2 )
+
+      float Wind10_avg_2 ( g0_lat_1, g0_lon_2 )
+
+ 

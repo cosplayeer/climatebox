@@ -3,19 +3,12 @@ import Nio
 import Ngl
 
 fname = "data/seasonal-monthly-sfc-2020-02_1-6.grib"
-fname2 = "data2/seasonal-monthly-sfc.nc"
 f = Nio.open_file(fname, mode='r',\
     options = None, format='grib')
-# u10 = f.variables['10U_GDS0_SFC']
-# v10 = f.variables['10V_GDS0_SFC']
-Wind10 =f.variables['10SI_GDS0_SFC']
-
-f2 = Nio.open_file(fname2, mode='r',\
-    options = None, format='nc')
-Wind10_avg = f2.variables['Speed']
-
-print(Wind10.shape)
-print(Wind10_avg.shape)
+# Wind10 =f.variables['10SI_GDS0_SFC']
+u10 = f.variables['10U_GDS0_SFC']
+v10 = f.variables['10V_GDS0_SFC']
+Wind10= np.sqrt(np.multiply(u10,u10) + np.multiply(v10,v10))
 
 Wind10_ensemble_average = np.average(Wind10, axis=0)
 print(Wind10_ensemble_average.shape) #(6, 181, 360)
@@ -103,10 +96,10 @@ resources.cnLineLabelsOn = False   # Turn off contour line labels.
 resources.cnLinesOn      = False   # Turn off contour lines.
 resources.cnFillOn       = True    # Turn on contour fill.
 
-resources.cnLevelSelectionMode = "ManualLevels"  # Select contour levels.
-resources.cnMinLevelValF       = 0.
-resources.cnMaxLevelValF       = 18
-resources.cnLevelSpacingF      =   2.5
+resources.cnLevelSelectionMode = "AutomaticLevels" #"ManualLevels"  # Select contour levels.
+# resources.cnMinLevelValF       = 0.
+# resources.cnMaxLevelValF       = 18
+# resources.cnLevelSpacingF      =   2.5
 
 resources.tmXBLabelFontHeightF   = 0.020
 resources.tmYLLabelFontHeightF   = 0.020

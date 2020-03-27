@@ -5,7 +5,8 @@ import cdsapi
 # year: 1999-2018
 
 def main():
-    for iyear in range(1999,2018):
+    # for iyear in range(1999,2018):
+    for iyear in range(2018,2020):
         print("downloading " + str(iyear))
         c = cdsapi.Client()
         c.retrieve(

@@ -4,6 +4,7 @@ f = addfiles(file_list,"r")
 
 ListSetType(f, "join")
 var = f[:]->Wind10_avg
+; var = f[:]->Wind10_avg_2
 print(getvardimnames(var))
 printVarSummary(var)
 var2 = dim_avg_n_Wrap((var), 0)
