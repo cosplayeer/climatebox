@@ -115,27 +115,28 @@ speed10m_year19avg_regrid@long_name = "Seasonal-forecast average wind speed rati
 speed10m_year19avg_regrid@units     = "m/s"
 ncdf->Speed10m = speed10m_year19avg_regrid
 
+;deviation not good
 ;---------------------------------------------
 ;read in era5 20year april　
 ;Prepare: Read_avgERA5_April, output nc data, done
 ; read in Speed10m, Speed10m_UV, Speed100m_UV
-fileERA5 = "ncdata/ERA5-wind-april-20year-average.nc"
-b1 = addfile(fileERA5,"r")
-windspeed10m_april_ERA5 = b1->Speed10m
-;windspeed10m_april_ea_regrid 6m/s
-printVarSummary(windspeed10m_april_ERA5)
-print(avg(windspeed10m_april_ERA5))
-windspeed10m_april_ERA5_devide = windspeed10m_april_ERA5 / speed10m_year19avg_regrid
+; fileERA5 = "ncdata/ERA5-wind-april-20year-average.nc"
+; b1 = addfile(fileERA5,"r")
+; windspeed10m_april_ERA5 = b1->Speed10m
+; ;windspeed10m_april_ea_regrid 6m/s
+; printVarSummary(windspeed10m_april_ERA5)
+; print(avg(windspeed10m_april_ERA5))
+; windspeed10m_april_ERA5_devide = windspeed10m_april_ERA5 / speed10m_year19avg_regrid
 
-printMinMax(windspeed10m_april_ERA5_devide,True)
-print(avg(windspeed10m_april_ERA5_devide))
+; printMinMax(windspeed10m_april_ERA5_devide,True)
+; print(avg(windspeed10m_april_ERA5_devide))
 
-; ;write to nc
-outname = "./ncdata/ERA5-wind-april-20year-divede-Seasonal.nc"
-system("/bin/rm -f " + outname)
-ncdf = addfile(outname,"c")
+; ; ;write to nc
+; outname = "./ncdata/ERA5-wind-april-20year-divede-Seasonal.nc"
+; system("/bin/rm -f " + outname)
+; ncdf = addfile(outname,"c")
 
-; filedimdef(ncdf, "time", -1, True)
-windspeed10m_april_ERA5_devide@long_name = "wind speed ratio at 10m april ERA5 devide Seasonal"
-windspeed10m_april_ERA5_devide@units     = " "
-ncdf->Speed10mRatio = windspeed10m_april_ERA5_devide
+; ; filedimdef(ncdf, "time", -1, True)
+; windspeed10m_april_ERA5_devide@long_name = "wind speed ratio at 10m april ERA5 devide Seasonal"
+; windspeed10m_april_ERA5_devide@units     = " "
+; ncdf->Speed10mRatio = windspeed10m_april_ERA5_devide
