@@ -1,0 +1,298 @@
+ Copyright (C) 1995-2019 - All Rights Reserved
+ University Corporation for Atmospheric Research
+ NCAR Command Language Version 6.6.2
+ The use of this software is governed by a License Agreement.
+ See http://www.ncl.ucar.edu/ for more details.
+
+Variable: f
+Type: file
+filename:	reanalysis-era5-single-levels-monthly-means-2000
+path:	reanalysis-era5-single-levels-monthly-means-2000.grib
+   file global attributes:
+   dimensions:
+      initial_time0_hours = 12
+      g0_lat_1 = 721
+      g0_lon_2 = 1440
+      g0_lat_3 = 361
+      g0_lon_4 = 720
+      initial_time5_hours = 12
+   variables:
+      float SSTK_GDS0_SFC_S123 ( initial_time0_hours, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	Sea surface temperature
+         units :	K
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	128
+         parameter_number :	34
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+
+      float SP_GDS0_SFC_S123 ( initial_time0_hours, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	Surface pressure
+         units :	Pa
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	128
+         parameter_number :	134
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+
+      float MSL_GDS0_SFC_S123 ( initial_time0_hours, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	Mean sea level pressure
+         units :	Pa
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	128
+         parameter_number :	151
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+
+      float 10U_GDS0_SFC_S123 ( initial_time0_hours, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	10 metre U wind component
+         units :	m s**-1
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	128
+         parameter_number :	165
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+
+      float 10V_GDS0_SFC_S123 ( initial_time0_hours, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	10 metre V wind component
+         units :	m s**-1
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	128
+         parameter_number :	166
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+
+      float 2T_GDS0_SFC_S123 ( initial_time0_hours, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	2 metre temperature
+         units :	K
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	128
+         parameter_number :	167
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+
+      float 2D_GDS0_SFC_S123 ( initial_time0_hours, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	2 metre dewpoint temperature
+         units :	K
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	128
+         parameter_number :	168
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+
+      float 10SI_GDS0_SFC_S123 ( initial_time0_hours, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	10 metre wind speed
+         units :	m s**-1
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	128
+         parameter_number :	207
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+
+      float SWH_GDS0_MSL_S123 ( initial_time0_hours, g0_lat_3, g0_lon_4 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	Significant wave height
+         units :	m
+         _FillValue :	1e+20
+         level_indicator :	102
+         gds_grid_type :	0
+         parameter_table_version :	140
+         parameter_number :	229
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+
+      float MWD_GDS0_MSL_S123 ( initial_time0_hours, g0_lat_3, g0_lon_4 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	Mean wave direction
+         units :	degrees
+         _FillValue :	1e+20
+         level_indicator :	102
+         gds_grid_type :	0
+         parameter_table_version :	140
+         parameter_number :	230
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+
+      float MWP_GDS0_MSL_S123 ( initial_time0_hours, g0_lat_3, g0_lon_4 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	Mean wave period
+         units :	s
+         _FillValue :	1e+20
+         level_indicator :	102
+         gds_grid_type :	0
+         parameter_table_version :	140
+         parameter_number :	232
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+
+      float I10FG_GDS0_SFC_S133 ( initial_time5_hours, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	Instantaneous 10 metre wind gust
+         units :	m s**-1
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	228
+         parameter_number :	29
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	climatological average of N forecasts, each a year apart and each of an equal specified duration.
+         statistical_process_duration :	11 hours (beginning 1 hours after reference time at intervals of 1 year)
+         N :	<ARRAY of 12 elements>
+
+      float 100U_GDS0_SFC_S123 ( initial_time0_hours, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	100 metre U wind component
+         units :	m s**-1
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	228
+         parameter_number :	246
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+
+      float 100V_GDS0_SFC_S123 ( initial_time0_hours, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	100 metre V wind component
+         units :	m s**-1
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	228
+         parameter_number :	247
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 12 elements>
+
+      double initial_time0_hours ( initial_time0_hours )
+         long_name :	initial time
+         units :	hours since 1800-01-01 00:00
+
+      double initial_time0_encoded ( initial_time0_hours )
+         long_name :	initial time encoded as double
+         units :	yyyymmddhh.hh_frac
+
+      double initial_time5_hours ( initial_time5_hours )
+         long_name :	initial time
+         units :	hours since 1800-01-01 00:00
+
+      double initial_time5_encoded ( initial_time5_hours )
+         long_name :	initial time encoded as double
+         units :	yyyymmddhh.hh_frac
+
+      string initial_time5 ( initial_time5_hours )
+         long_name :	Initial time of first record
+         units :	mm/dd/yyyy (hh:mm)
+
+      float g0_lat_3 ( g0_lat_3 )
+         long_name :	latitude
+         GridType :	Cylindrical Equidistant Projection Grid
+         units :	degrees_north
+         Dj :	0.5
+         Di :	0.5
+         Lo2 :	359.5
+         La2 :	-90
+         Lo1 :	 0
+         La1 :	90
+
+      float g0_lon_4 ( g0_lon_4 )
+         long_name :	longitude
+         GridType :	Cylindrical Equidistant Projection Grid
+         units :	degrees_east
+         Dj :	0.5
+         Di :	0.5
+         Lo2 :	359.5
+         La2 :	-90
+         Lo1 :	 0
+         La1 :	90
+
+      float g0_lat_1 ( g0_lat_1 )
+         long_name :	latitude
+         GridType :	Cylindrical Equidistant Projection Grid
+         units :	degrees_north
+         Dj :	0.25
+         Di :	0.25
+         Lo2 :	359.75
+         La2 :	-90
+         Lo1 :	 0
+         La1 :	90
+
+      float g0_lon_2 ( g0_lon_2 )
+         long_name :	longitude
+         GridType :	Cylindrical Equidistant Projection Grid
+         units :	degrees_east
+         Dj :	0.25
+         Di :	0.25
+         Lo2 :	359.75
+         La2 :	-90
+         Lo1 :	 0
+         La1 :	90
+
+      string initial_time0 ( initial_time0_hours )
+         long_name :	Initial time of first record
+         units :	mm/dd/yyyy (hh:mm)
+
+ 

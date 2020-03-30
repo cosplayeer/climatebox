@@ -106,13 +106,13 @@ do n = 0, numlat -1
     lat2d(n,:) = lat1d(n)
 end do
 ; wind uv
-foutf = "./text/Seasonal-forecast-april-regrid-minus-ERA5-month-average-10m.csv"
-header = ("longitude,   latitude,    windspeed-uv-10m")
-hlist = [/header/]
-alist = [/lon2d, lat2d, windspeed10m_april_UV_ERA5minus/]
-system("/bin/rm -f " + foutf)
-write_table(foutf, "w", hlist, "%s")
-write_table(foutf, "a", alist, "%9.4f, %9.4f, %9.4f")
+; foutf = "./text/Seasonal-forecast-april-regrid-minus-ERA5-month-average-10m.csv"
+; header = ("longitude,   latitude,    windspeed-uv-10m")
+; hlist = [/header/]
+; alist = [/lon2d, lat2d, windspeed10m_april_UV_ERA5minus/]
+; system("/bin/rm -f " + foutf)
+; write_table(foutf, "w", hlist, "%s")
+; write_table(foutf, "a", alist, "%9.4f, %9.4f, %9.4f")
 ; wind no uv
 foutf = "./text/Seasonal-forecast-april-regrid-minus-ERA5-month-average-10m-noUV.csv"
 header = ("longitude,   latitude,    windspeed-nouv-10m")
