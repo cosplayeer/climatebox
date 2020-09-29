@@ -41,7 +41,7 @@ printVarSummary(s)
 printMinMax(s(0,:,:), True)
 ; printMinMax(s(1,:,:), True)
 ; ;write to nc
-outname = "./ncdata/Seasonal-forecast-wind-2020-april-0.25p.nc"
+outname = "./ncdata/Seasonal-forecast-wind-2020-April-0.25p.nc"
 system("/bin/rm -f " + outname)
 ncdf = addfile(outname,"c")
 

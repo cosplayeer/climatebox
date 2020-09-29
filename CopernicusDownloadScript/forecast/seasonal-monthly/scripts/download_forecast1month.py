@@ -16,11 +16,10 @@ c.retrieve(
             'monthly_mean', 'monthly_minimum', 'monthly_standard_deviation',
         ],
         'year': '2020',
-        'month': '02',
+        'month': '04',
         'leadtime_month': [
             '1', '2', '3',
-            '4', '5', '6',
         ],
         'format': 'grib',
     },
-    '../data/seasonal-monthly-sfc-2020-02_1-6_new.grib')
+    '../data/seasonal-monthly-sfc-2020-04_1-3_new.grib')

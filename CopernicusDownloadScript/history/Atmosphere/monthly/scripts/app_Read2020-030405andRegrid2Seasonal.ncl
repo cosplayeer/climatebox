@@ -6,27 +6,27 @@
 
 
 ;------------------month april-------------------------------
-monthname = "april"
+monthname = "April"
 function test(monthname:string)
 begin
 ;readin forecast 1x1
-file2020_03 = "../../../forecast/seasonal-monthly/data/seasonal-monthly-sfc-2019-03_leadtime123.grib"
+file2020_03 = "../../../forecast/seasonal-monthly/data/seasonal-monthly-sfc-2020-03_leadtime123.grib"
 a1 = addfile(file2020_03,"r")
 windspeed10m = a1->10SI_GDS0_SFC
 
-windspeed10m_april = windspeed10m(:,0,:,:)
-windspeed10m_april_ea = dim_avg_n_Wrap(windspeed10m_april, 0)
+windspeed10m_April = windspeed10m(:,0,:,:)
+windspeed10m_April_ea = dim_avg_n_Wrap(windspeed10m_April, 0)
 windspeed10m_May = windspeed10m(:,1,:,:)
 windspeed10m_May_ea = dim_avg_n_Wrap(windspeed10m_May, 0)
 windspeed10m_June = windspeed10m(:,2,:,:)
 windspeed10m_June_ea = dim_avg_n_Wrap(windspeed10m_June, 0)
-print(avg(windspeed10m_april_ea))
-printVarSummary(windspeed10m_april_ea)
+print(avg(windspeed10m_April_ea))
+printVarSummary(windspeed10m_April_ea)
 
 ;------------------------------------------------------
 ;regrid to 0.25
 ;---------------------------------------------
-; regrid windspeed10m_april_ea 6 m/s april
+; regrid windspeed10m_April_ea 6 m/s April
 Opt                = True
 
 Opt@SrcFileName    = "src_SCRIP.nc"	;写入的元数据描述文件
@@ -34,16 +34,16 @@ Opt@DstFileName    = "dst_SCRIP.nc" ;写入的目标数据描述文件
 Opt@WgtFileName    = "NCEP_2_Rect.nc"
 Opt@ForceOverwrite = True
 
-Opt@SrcGridMask    = where(.not.ismissing(windspeed10m_april_ea),1,0)   ; use SrcMask2D in NCL V6.2.1 and earlier
+Opt@SrcGridMask    = where(.not.ismissing(windspeed10m_April_ea),1,0)   ; use SrcMask2D in NCL V6.2.1 and earlier
 
 Opt@DstGridType    = "0.25x0.25"
 Opt@DstLLCorner    = (/ -90.d,   0.d/) ; (default = [-90,-180])
 Opt@DstURCorner    = (/  90.d, 359.75/) ;(default = [90,180])
 
-windspeed10m_april_ea_regrid = ESMF_regrid(windspeed10m_april_ea,Opt)
-; printVarSummary(windspeed10m_april_ea_regrid)
-; print(avg(windspeed10m_april_ea_regrid))
-; printMinMax(windspeed10m_april_ea_regrid, False)
+windspeed10m_April_ea_regrid = ESMF_regrid(windspeed10m_April_ea,Opt)
+; printVarSummary(windspeed10m_April_ea_regrid)
+; print(avg(windspeed10m_April_ea_regrid))
+; printMinMax(windspeed10m_April_ea_regrid, False)
 
 ;---------------------------------------------
 ; regrid windspeed10m_May_ea 6 m/s 
@@ -80,26 +80,38 @@ Opt@DstURCorner    = (/  90.d, 359.75/) ;(default = [90,180])
 windspeed10m_June_ea_regrid = ESMF_regrid(windspeed10m_June_ea,Opt)
 
 ;---------------------------------------------
-;read in era5 20year april　
-;Prepare: Read_avgERA5_April, output nc data, done
+;read in era5 20year April　
+;Prepare: Read_Seasonalforecast-03-April-avg.ncl, output nc data, done
 ; read in Speed10m, Speed10m_UV, Speed100m_UV
-;b1
-fileSea = "ncdata/Seasonal-forecast-wind-" + monthname + "-20year.nc"
+;b1 ;april not change!!!
+fileSea = "ncdata/Seasonal-forecast-wind-" + "april" + "-20year.nc"
 b1 = addfile(fileSea,"r")
-windspeed10m_april_Sea = b1->Speed10m
-windspeed10m_april_Sea_percent = (windspeed10m_april_ea_regrid - windspeed10m_april_Sea) / windspeed10m_april_Sea * 100
+windspeed10m_April_Sea = b1->Speed10m
+windspeed10m_April_Sea_percent = (windspeed10m_April_ea_regrid - windspeed10m_April_Sea) / windspeed10m_April_Sea * 100
+print("April")
+print(windspeed10m_April_Sea_percent(472,376))
+; print(windspeed10m_April_Sea_percent(474,374))
+print("-------")
 ;b2
 fileSea = "ncdata/Seasonal-forecast-wind-" + "May" + "-20year.nc"
 b2 = addfile(fileSea,"r")
 windspeed10m_May_Sea = b2->Speed10m
 windspeed10m_May_Sea_percent = (windspeed10m_May_ea_regrid - windspeed10m_May_Sea) / windspeed10m_May_Sea * 100
+print("May")
+print(windspeed10m_May_Sea_percent(472,376))
+; print(windspeed10m_May_Sea_percent(474,374))
+print("-------")
 ;b3
 fileSea = "ncdata/Seasonal-forecast-wind-" + "june" + "-20year.nc"
 b3 = addfile(fileSea,"r")
 windspeed10m_june_Sea = b3->Speed10m
 windspeed10m_june_Sea_percent = (windspeed10m_June_ea_regrid - windspeed10m_june_Sea) / windspeed10m_june_Sea * 100
-printMinMax(windspeed10m_april_Sea_percent,True)
-print(avg(windspeed10m_april_Sea_percent))
+print("June")
+print(windspeed10m_june_Sea_percent(472,376))
+; print(windspeed10m_june_Sea_percent(474,374))
+print("-------")
+printMinMax(windspeed10m_April_Sea_percent,True)
+print(avg(windspeed10m_April_Sea_percent))
 printMinMax(windspeed10m_May_Sea_percent,True)
 print(avg(windspeed10m_May_Sea_percent))
 printMinMax(windspeed10m_june_Sea_percent,True)
@@ -133,10 +145,10 @@ do n = 0, numlat -1
     lat2d(n,:) = lat1d(n)
 end do
 ; wind 10m 2020 minus Seasonal-history(%) april
-foutf = "./text/Seasonal-forecast-2020-april-regrid-minus-Seasonalhistory-month-" + "April" + "-average-10m.csv"
+foutf = "./text/Seasonal-forecast-2020-regrid-minus-Seasonalhistory-month-" + "April" + "-average-10mNew.csv"
 header = ("longitude,   latitude,    windspeed-10m")
 hlist = [/header/]
-alist = [/lon2d, lat2d, windspeed10m_april_Sea_percent/]
+alist = [/lon2d, lat2d, windspeed10m_April_Sea_percent/]
 system("/bin/rm -f " + foutf)
 write_table(foutf, "w", hlist, "%s")
 write_table(foutf, "a", alist, "%9.4f, %9.4f, %9.4f")
@@ -146,12 +158,12 @@ outname = "./ncdata/2020-April-seasonal-percent-10m.nc"
 system("/bin/rm -f " + outname)
 ncdf = addfile(outname,"c")
 ; filedimdef(ncdf, "time", -1, True)
-windspeed10m_april_Sea_percent@long_name = "wind speed april seasonal percent"
-windspeed10m_april_Sea_percent@units     = "%"
-ncdf->percent = windspeed10m_april_Sea_percent
+windspeed10m_April_Sea_percent@long_name = "wind speed April seasonal percent"
+windspeed10m_April_Sea_percent@units     = "%"
+ncdf->percent = windspeed10m_April_Sea_percent
 ;---
 ; wind 10m 2020 minus Seasonal-history(%) May
-foutf = "./text/Seasonal-forecast-2020-april-regrid-minus-Seasonalhistory-month-" + "May" + "-average-10m.csv"
+foutf = "./text/Seasonal-forecast-2020-regrid-minus-Seasonalhistory-month-" + "May" + "-average-10mNew.csv"
 header = ("longitude,   latitude,    windspeed-10m")
 hlist = [/header/]
 alist = [/lon2d, lat2d, windspeed10m_May_Sea_percent/]
@@ -160,7 +172,7 @@ write_table(foutf, "w", hlist, "%s")
 write_table(foutf, "a", alist, "%9.4f, %9.4f, %9.4f")
 ;---
 ;write to nc
-outname = "./ncdata/2020-May-seasonal-percent-10m.nc"
+outname = "./ncdata/2020-May-seasonal-percent-10mNew.nc"
 system("/bin/rm -f " + outname)
 ncdf = addfile(outname,"c")
 ; filedimdef(ncdf, "time", -1, True)
@@ -169,7 +181,7 @@ windspeed10m_May_Sea_percent@units     = "%"
 ncdf->percent = windspeed10m_May_Sea_percent
 ;---
 ; wind 10m 2020 minus Seasonal-history(%) june
-foutf = "./text/Seasonal-forecast-2020-april-regrid-minus-Seasonalhistory-month-" + "June" + "-average-10m.csv"
+foutf = "./text/Seasonal-forecast-2020-regrid-minus-Seasonalhistory-month-" + "June" + "-average-10mNew.csv"
 header = ("longitude,   latitude,    windspeed-10m")
 hlist = [/header/]
 alist = [/lon2d, lat2d, windspeed10m_june_Sea_percent/]
@@ -178,7 +190,7 @@ write_table(foutf, "w", hlist, "%s")
 write_table(foutf, "a", alist, "%9.4f, %9.4f, %9.4f")
 ;---
 ;write to nc
-outname = "./ncdata/2020-June-seasonal-percent-10m.nc"
+outname = "./ncdata/2020-June-seasonal-percent-10mNew.nc"
 system("/bin/rm -f " + outname)
 ncdf = addfile(outname,"c")
 ; filedimdef(ncdf, "time", -1, True)

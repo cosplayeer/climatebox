@@ -1,9 +1,93 @@
-1. 生成ＥＲＡ５月平均数据：　OK
-    [20] x [12] x [721] x [1440]　－＞　[12] x [721] x [1440]
-    ncl scripts/Read_avg.ncl
-    readin:  data
-    output: ./ncdata/ERA5-all-month-average.nc
-2. 将预报资料插值到０．２５度
-    ｉｎｇ
-４．画图
-３．做插值
+核心目录是history
+Task0:
+    下载资料, 进入forecast目录
+    app_download_leadtime3_456_from_month3.py
+    生成leadtime123.grib
+
+
+Task1:
+    app_Read2020-030405andRegrid2Seasonal.ncl 和
+    app_Read202004-last3month-andRegrid2Seasonal10m.ncl
+
+Read_Seasonalforecast-03-May-avg.ncl
+
+Task2:
+    Percent2Above50%.sh
+
+
+1.1 2020年４月对８月预报与多年（１０）历史平均４月对８月预报的偏差
+    Seasonal-forecast-wind-August-1999-200810year.nc
+    Seasonal-forecast-wind-August-1999-2018-20-year.nc
+    改写app_Read202004-last3month-andRegrid2Seasonal10m.ncl
+    改写app_Read202004-last6month-andRegrid2Seasonal10m.ncl OK
+    ＃１先处理２０２０年的最新下载，改文件名后缀
+    ＃２集合平均２０２０年的并插值到０．２５ 脚本采用下方的2.2.2　點ＯＫ
+    ＃３历史多年平均　2.2.1 OK
+    # 4 集合成员５０％偏差percent OK
+    # 5百分比偏差
+2.2 
+    2.2.1 ncl scripts/Read_Seasonalforecast-04-August-avg.ncl
+        OK
+    2.2.2 ncl scripts/Read_Seasonalforecast-202004-August-regrid.ncl
+        1 hour
+    2.2.3 ncl scripts/Percent2_positive_esemble202004-august.ncl
+    
+
+1.1 2020年5月对678月预报与多年（１０）历史平均5月对678月预报的偏差
+    Seasonal-forecast-wind-August-1999-200810year.nc
+    Seasonal-forecast-wind-August-1999-2018-20-year.nc
+    改写app_Read202004-last3month-andRegrid2Seasonal10m.ncl
+    改写app_Read202004-last6month-andRegrid2Seasonal10m.ncl OK
+
+2.2 First:
+    1. 20 yearly historical-average(20years) 0.25p
+    !!ncl scripts/Read_Seasonalforecast-04-August-avg.ncl
+        output ncdata/Sesonal-forecast-rad-August-20year.nc
+        OK
+    2. 2020 year forecast-esemble-check 0.25p
+    !!ncl scripts/Read_Seasonalforecast-202004-August-regrid.ncl
+        1 hour OK
+        (warning: no process available at the same time, ESMF intermidia data.)
+    3. 
+    !!ncl scripts/Percent2_positive_esemble202004-august.ncl
+
+# Half year forecast (6 monthly + Wind + Radiation)
+    new script:
+    Read_Seasonalforecast-202005-June-regridRad.ncl #hard
+    Read_Seasonalforecast-202005-July-regridRad.ncl
+    Read_Seasonalforecast-202005-August-regridRad.ncl
+    #output:51x721x1440
+    Seasonal-forecast-rad-202006-December-0.25p.nc
+    Seasonal-forecast-rad-202006-August-0.25p.nc
+    Seasonal-forecast-rad-202006-September-0.25p.nc
+    Seasonal-forecast-rad-202006-October-0.25p.nc
+    Seasonal-forecast-rad-202006-November-0.25p.nc
+    Seasonal-forecast-rad-202006-July-0.25p.nc
+    #ncea -v Speed10m Seasonal-forecast-rad-202006-*-0.25p.nc Seasonal-forecast-rad-202006-0.25p-6monthly.nc
+    - wind
+    #ncea -v Speed10m Seasonal-forecast-wind202006-*-0.25p.nc Seasonal-forecast-wind-202006-0.25p-6montyly.nc
+
+    #--------------------------------------------------
+    Read_Seasonalforecast-05-June-avgRad.ncl #easy #many
+    Read_Seasonalforecast-05-June-avgRad.ncl
+    Read_Seasonalforecast-05-June-avgRad.ncl
+    # Read_Seasonalforecast-06-July-avgWind.ncl
+    # Read_Seasonalforecast-06-July-avgRad.ncl
+    # output: 721x1440
+    Seasonal-forecast-rad-July-20year.nc
+    Seasonal-forecast-rad-August-20year.nc
+    Seasonal-forecast-rad-September-20year.nc
+    Seasonal-forecast-rad-October-20year.nc
+    Seasonal-forecast-rad-November-20year.nc
+    Seasonal-forecast-rad-December-20year.nc
+    # ncea -v Speed10m Seasonal-forecast-rad-*-20year.nc 
+    # Seasonal-forecast-rad-20year-6monthly.nc
+    # wind
+    ncea -v Speed10m Seasonal-forecast-wind*-20year.nc Seasonal-forecast-wind-20year-6monthly.nc
+    #--------------------------------------------------
+    Percent2_positive_esemble202005-june.ncl
+    Percent2_positive_esemble202005-july.ncl
+    Percent2_positive_esemble202005-august.ncl #easy++ # one ncl file enough
+
+    #--------------------------------------------------
+    app_Read202005-last6month-andRegrid2SeasonalRad.ncl

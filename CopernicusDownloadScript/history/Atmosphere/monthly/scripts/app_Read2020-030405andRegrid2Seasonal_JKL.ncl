@@ -81,10 +81,10 @@ windspeed10m_June_ea_regrid = ESMF_regrid(windspeed10m_June_ea,Opt)
 
 ;---------------------------------------------
 ;read in era5 20year april　
-;Prepare: Read_avgERA5_April, output nc data, done
+;Prepare: Read_Seasonalforecast-03-April-avg.ncl, output nc data, done
 ; read in Speed10m, Speed10m_UV, Speed100m_UV
 ;b1
-fileSea = "ncdata/Seasonal-forecast-wind-" + monthname + "-20year.nc"
+fileSea = "ncdata/Seasonal-forecast-wind-" + "april" + "-20year.nc"
 b1 = addfile(fileSea,"r")
 windspeed10m_april_Sea = b1->Speed10m
 windspeed10m_april_Sea_percent = (windspeed10m_april_ea_regrid - windspeed10m_april_Sea) / windspeed10m_april_Sea * 100
@@ -140,7 +140,7 @@ do n = 0, numlat -1
     lat2d(n,:) = lat1d(n)
 end do
 ; wind 10m 2020 minus Seasonal-history(%) april
-foutf = "./text/Seasonal-forecast-2020-april-regrid-minus-Seasonalhistory-month-" + "April" + "-average-100m.csv"
+foutf = "./text/Seasonal-forecast-2020-regrid-minus-Seasonalhistory-month-" + "April" + "-average-100mNew.csv"
 header = ("longitude,   latitude,    windspeed-100m")
 hlist = [/header/]
 alist = [/lon2d, lat2d, windspeed100m_april_Sea_percent/]
@@ -158,7 +158,7 @@ write_table(foutf, "a", alist, "%9.4f, %9.4f, %9.4f")
 ; ncdf->percent = windspeed10m_april_Sea_percent
 ;---
 ; wind 10m 2020 minus Seasonal-history(%) May
-foutf = "./text/Seasonal-forecast-2020-april-regrid-minus-Seasonalhistory-month-" + "May" + "-average-100m.csv"
+foutf = "./text/Seasonal-forecast-2020-regrid-minus-Seasonalhistory-month-" + "May" + "-average-100mNew.csv"
 header = ("longitude,   latitude,    windspeed-100m")
 hlist = [/header/]
 alist = [/lon2d, lat2d, windspeed100m_May_Sea_percent/]
@@ -176,7 +176,7 @@ write_table(foutf, "a", alist, "%9.4f, %9.4f, %9.4f")
 ; ncdf->percent = windspeed10m_May_Sea_percent
 ;---
 ; wind 10m 2020 minus Seasonal-history(%) june
-foutf = "./text/Seasonal-forecast-2020-april-regrid-minus-Seasonalhistory-month-" + "June" + "-average-100m.csv"
+foutf = "./text/Seasonal-forecast-2020-regrid-minus-Seasonalhistory-month-" + "June" + "-average-100mNew.csv"
 header = ("longitude,   latitude,    windspeed-100m")
 hlist = [/header/]
 alist = [/lon2d, lat2d, windspeed100m_june_Sea_percent/]

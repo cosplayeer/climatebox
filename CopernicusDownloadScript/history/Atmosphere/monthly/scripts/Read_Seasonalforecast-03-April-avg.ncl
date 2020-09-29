@@ -106,7 +106,7 @@ printVarSummary(speed10m_year19avg_regrid)
 print(avg(speed10m_year19avg_regrid))
 
 ; ;write to nc
-outname = "./ncdata/Seasonal-forecast-wind-april-20year.nc"
+outname = "./ncdata/Seasonal-forecast-wind-April-20year.nc"
 system("/bin/rm -f " + outname)
 ncdf = addfile(outname,"c")
 

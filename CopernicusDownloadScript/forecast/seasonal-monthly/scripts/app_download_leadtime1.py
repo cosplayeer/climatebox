@@ -7,7 +7,7 @@ import cdsapi
 def main():
     monthlists = ['01','02','03','04','05','06',
                     '07','08','09','10','11','12']
-    #for iyear in range(1999,2018):
+    #for iyear in range(1999,2018): #old: until 2017
     for iyear in range(2018,2020):
         for imonth in monthlists:
             print("downloading " + str(iyear) + str(imonth))
@@ -30,7 +30,7 @@ def main():
                     'year': str(iyear),
                     'leadtime_month': '1',
                 },
-                './data/seasonal-monthly-sfc-' + str(iyear) + '-' + str(imonth) + '_1.grib')
+                './data1819/seasonal-monthly-sfc-' + str(iyear) + '-' + str(imonth) + '_1.grib')
 
 if __name__ == '__main__':
     main()

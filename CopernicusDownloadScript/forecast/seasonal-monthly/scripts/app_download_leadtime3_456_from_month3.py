@@ -1,13 +1,13 @@
 import cdsapi
 
 
-
-# year: 1999-2018
+# year: 1999-2019
+# rundir : ../scripts
 
 def main():
-    monthlists = ['03']
-    #for iyear in range(1999,2018):
-    for iyear in range(2020,1999,-1):
+    monthlists = ['09']
+    for iyear in range(2000,2021):
+    # for iyear in range(2020,2021):
         for imonth in monthlists:
             print("downloading " + str(iyear) + str(imonth))
             c = cdsapi.Client()
@@ -27,7 +27,10 @@ def main():
                     'month': str(imonth),
                     'year': str(iyear),
                     'leadtime_month': ['1','2','3'],
+                    # 'leadtime_month': ['1','2','3','4','5','6'],
+                    # 'leadtime_month': ['4'],
                 },
+                # './data/seasonal-monthly-sfc-' + str(iyear) + '-' + str(imonth) + '_leadtime123.grib')
                 './data/seasonal-monthly-sfc-' + str(iyear) + '-' + str(imonth) + '_leadtime123.grib')
 
 if __name__ == '__main__':

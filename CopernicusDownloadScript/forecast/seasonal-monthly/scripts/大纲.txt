@@ -48,7 +48,7 @@ ReadEnsembles_2_avg_monthly.sh -->data2/12month,需重命名
         python3 scripts/ReadGribandNCPlotNGLeverymonth.py 结果总数很夸张
 
 
-todo:
+todo old:
 1. 多年平均图
 １．１ ERA5多年平均
     1. 读取     OK
@@ -63,10 +63,20 @@ Gif 图
 2. 集合
     ReadGribPlotPanelNGL.py
 
-todo new:
+todo 2020年３月２５日对４月预报:
 1. 2020年３月２５日对４月预报－ＥＲＡ５历史多年平均
     １．　读取预报
     ２．　插值到０．２５
     ３．　读取ＥＲＡ５
     ４．　ｔｏｄｏ
 ２. 2020年３月２５日对４，５，６月预报－ＥＲＡ５历史多年平均
+
+todo 2020年４月２５日对５月预报:
+1. 2020年４月２５日对５月预报－ＥＲＡ５历史多年平均
+    １．　读取预报
+    ２．　插值到０．２５
+    ３．　读取历史ＥＲＡ５　1999-2019　０４月
+        38M	../data/seasonal-monthly-sfc-1999-04_leadtime123.grib
+        78M	../data/seasonal-monthly-sfc-2019-04_leadtime123.grib
+    ４．　ｔｏｄｏ
+２. 2020年４月２５日对５，６，７月预报－ＥＲＡ５历史多年平均
