@@ -1,0 +1,82 @@
+monthly average:  9 months
+refrence:
+https://www.ncei.noaa.gov/data/climate-forecast-system/access/operational-9-month-forecast/monthly-means/2021/202111/20211118/2021111800/
+flxf.01.2021110100.202208.avrg.grib.grb2:
+      float VGRD_P8_L103_GGA0_avg1m ( lat_0, lon_0 )
+         long_name :	V-component of wind
+         units :	m s-1
+         _FillValue :	1e+20
+         grid_type :	Gaussian latitude/longitude
+         parameter_discipline_and_category :	Meteorological products, Momentum
+         level_type :	Specified height level above ground (m)
+         level :	10
+         type_of_statistical_processing :	Average
+         statistical_process_duration :	1 months (ending at forecast time)
+         forecast_time :	10
+         forecast_time_units :	months
+         initial_time :	11/01/2021 (00:00)
+      float VGRD_P8_L105_GGA0_avg1m ( lat_0, lon_0
+
+ipvf.01.2021110100.202208.avrg.grib.grb2:
+     Isentropic (theta) level (K)
+
+
+pgbf.01.2021110100.202208.avrg.grib.grb2:
+Variable: f
+Type: file
+filename:	pgbf.01.2021110100.202208.avrg.grib
+path:	pgbf.01.2021110100.202208.avrg.grib.grb2
+   file global attributes:
+   dimensions:
+      lat_0 = 181
+      lon_0 = 360
+      lv_ISBL0 = 37
+      lv_AMSL1 = 4
+      lv_PVL2 = 2
+      lv_SIGL3 = 4
+      lv_ISBL4 = 32
+      lv_ISBL5 = 2
+      lv_HTGL6 = 2
+   variables:
+many:
+      float VGRD_P8_L100_GLL0_avg1m ( lv_ISBL0, lat_0, lon_0 )
+         center :	US National Weather Service - NCEP (WMC)
+         production_status :	Operational products
+         long_name :	V-component of wind
+         units :	m s-1
+         _FillValue :	1e+20
+         grid_type :	Latitude/longitude
+         parameter_discipline_and_category :	Meteorological products, Momentum
+         parameter_template_discipline_category_number :	( 8, 0, 2, 3 )
+         level_type :	Isobaric surface (Pa)
+         type_of_statistical_processing :	Average
+         statistical_process_duration :	1 months (ending at forecast time)
+         forecast_time :	10
+         forecast_time_units :	months
+         initial_time :	11/01/2021 (00:00)
+
+      float VGRD_P8_L102_GLL0_avg1m ( lv_AMSL1, lat_0, lon_0 )
+         center :	US National Weather Service - NCEP (WMC)
+         production_status :	Operational products
+         long_name :	V-component of wind
+         units :	m s-1
+         _FillValue :	1e+20
+         grid_type :	Latitude/longitude
+         parameter_discipline_and_category :	Meteorological products, Momentum
+         parameter_template_discipline_category_number :	( 8, 0, 2, 3 )
+         level_type :	Specific altitude above mean sea level (m)
+         type_of_statistical_processing :	Average
+         statistical_process_duration :	1 months (ending at forecast time)
+         forecast_time :	10
+         forecast_time_units :	months
+         initial_time :	11/01/2021 (00:00)
+
+
+
+-----------------------------------------------------------------
+
+
+ocnh.01.2021110100.202208.avrg.grib.grb2:
+no
+ocnf.01.2021110100.202208.avrg.grib.grb2:
+no
