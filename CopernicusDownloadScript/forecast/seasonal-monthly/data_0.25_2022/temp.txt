@@ -1,0 +1,23 @@
+ Copyright (C) 1995-2017 - All Rights Reserved
+ University Corporation for Atmospheric Research
+ NCAR Command Language Version 6.4.0
+ The use of this software is governed by a License Agreement.
+ See http://www.ncl.ucar.edu/ for more details.
+
+Variable: f
+Type: file
+filename:	wind202201
+path:	data_0.25_2022/wind202201.nc
+   file global attributes:
+   dimensions:
+      lat = 721
+      lon = 1440
+   variables:
+      double lat ( lat )
+
+      double lon ( lon )
+
+      float windspeed ( lat, lon )
+         _FillValue :	1e+20
+
+ 

@@ -1,0 +1,66 @@
+ Copyright (C) 1995-2017 - All Rights Reserved
+ University Corporation for Atmospheric Research
+ NCAR Command Language Version 6.4.0
+ The use of this software is governed by a License Agreement.
+ See http://www.ncl.ucar.edu/ for more details.
+
+Variable: f
+Type: file
+filename:	WindSpeed10mERA5monthly
+path:	data_0.25/WindSpeed10mERA5monthly.grib
+   file global attributes:
+   dimensions:
+      initial_time0_hours = 132    ;2001---2021 21years goal:22nian
+      g0_lat_1 = 721
+      g0_lon_2 = 1440
+   variables:
+      float 10SI_GDS0_SFC_S123 ( initial_time0_hours, g0_lat_1, g0_lon_2 )
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         long_name :	10 metre wind speed
+         units :	m s**-1
+         _FillValue :	1e+20
+         level_indicator :	1
+         gds_grid_type :	0
+         parameter_table_version :	128
+         parameter_number :	207
+         forecast_time :	0
+         forecast_time_units :	hours
+         statistical_process_descriptor :	average of N uninitialized analyses
+         statistical_process_duration :	instantaneous (beginning at reference time at intervals of 1 hours)
+         N :	<ARRAY of 132 elements>
+
+      double initial_time0_hours ( initial_time0_hours )
+         long_name :	initial time
+         units :	hours since 1800-01-01 00:00
+
+      double initial_time0_encoded ( initial_time0_hours )
+         long_name :	initial time encoded as double
+         units :	yyyymmddhh.hh_frac
+
+      float g0_lat_1 ( g0_lat_1 )
+         long_name :	latitude
+         GridType :	Cylindrical Equidistant Projection Grid
+         units :	degrees_north
+         Dj :	0.25
+         Di :	0.25
+         Lo2 :	359.75
+         La2 :	-90
+         Lo1 :	 0
+         La1 :	90
+
+      float g0_lon_2 ( g0_lon_2 )
+         long_name :	longitude
+         GridType :	Cylindrical Equidistant Projection Grid
+         units :	degrees_east
+         Dj :	0.25
+         Di :	0.25
+         Lo2 :	359.75
+         La2 :	-90
+         Lo1 :	 0
+         La1 :	90
+
+      string initial_time0 ( initial_time0_hours )
+         long_name :	Initial time of first record
+         units :	mm/dd/yyyy (hh:mm)
+
+ 

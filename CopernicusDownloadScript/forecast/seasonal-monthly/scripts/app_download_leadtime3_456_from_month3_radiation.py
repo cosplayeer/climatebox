@@ -2,12 +2,11 @@ import cdsapi
 
 
 # year: 1999-2019
-# rundir : ../scripts
 
 def main():
     monthlists = ['12']
-    for iyear in range(2004, 2022):
-        # for iyear in range(2020,2021):
+    # for iyear in range(2000,2002):
+    for iyear in range(2007, 2008):
         for imonth in monthlists:
             print("downloading " + str(iyear) + str(imonth))
             c = cdsapi.Client()
@@ -18,19 +17,19 @@ def main():
                     'originating_centre': 'ecmwf',
                     'system': '5',
                     'variable': [
-                        '10m_wind_speed',
+                        'surface_solar_radiation_downwards',
                     ],
                     'product_type': [
                         'ensemble_mean', 'monthly_mean',
                     ],
                     'month': str(imonth),
                     'year': str(iyear),
-                    # 'leadtime_month': ['1', '2', '3'],
+                    # 'leadtime_month': ['1','2','3'],
                     'leadtime_month': ['1', '2', '3', '4', '5', '6'],
                     # 'leadtime_month': ['4'],
                 },
                 # './data/seasonal-monthly-sfc-' + str(iyear) + '-' + str(imonth) + '_leadtime123.grib')
-                './data/seasonal-monthly-sfc-' + str(iyear) + '-' + str(imonth) + '_leadtime123456.grib')
+                './dataRadiation/seasonal-monthly-rad-' + str(iyear) + '-' + str(imonth) + '_leadtime123456.grib')
 
 
 if __name__ == '__main__':

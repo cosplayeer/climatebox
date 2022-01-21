@@ -1,0 +1,40 @@
+ Copyright (C) 1995-2017 - All Rights Reserved
+ University Corporation for Atmospheric Research
+ NCAR Command Language Version 6.4.0
+ The use of this software is governed by a License Agreement.
+ See http://www.ncl.ucar.edu/ for more details.
+
+Variable: f
+Type: file
+filename:	monthly-forecast-wind200012-2-0.25p
+path:	monthly-forecast-wind200012-2-0.25p.nc
+   file global attributes:
+   dimensions:
+      ncl0 = 51
+      lat = 721
+      lon = 1440
+   variables:
+      float Speed10m ( ncl0, lat, lon )
+         forecast_time4 :	1488
+         initial_time :	12/01/2000 (00:00)
+         parameter_number :	207
+         parameter_table_version :	128
+         gds_grid_type :	0
+         level_indicator :	1
+         units :	m/s
+         long_name :	monthly forecast average speed at 10m 2 0.25p
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         ensemble0 :	24
+         remap :	remapped via ESMF_regrid_with_weights: Bilinear
+         missing_value :	1e+20
+         _FillValue :	1e+20
+
+      double lat ( lat )
+         units :	degrees_north
+         long_name :	latitude
+
+      double lon ( lon )
+         units :	degrees_east
+         long_name :	longitude
+
+ 

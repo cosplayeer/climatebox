@@ -1,0 +1,72 @@
+ Copyright (C) 1995-2017 - All Rights Reserved
+ University Corporation for Atmospheric Research
+ NCAR Command Language Version 6.4.0
+ The use of this software is governed by a License Agreement.
+ See http://www.ncl.ucar.edu/ for more details.
+
+Variable: f
+Type: file
+filename:	monthly-forecast-wind200012-1-0.25p
+path:	monthly-forecast-wind200012-1-0.25p.nc
+   file global attributes:
+   dimensions:
+      ncl0 = 51
+      lat = 721
+      lon = 1440
+      ncl3 = 51
+      ncl4 = 51
+   variables:
+      float Speed10m ( ncl0, lat, lon )
+         forecast_time4 :	744
+         initial_time :	12/01/2000 (00:00)
+         parameter_number :	207
+         parameter_table_version :	128
+         gds_grid_type :	0
+         level_indicator :	1
+         units :	m/s
+         long_name :	monthly forecast average speed at 10m 1 0.25p
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         ensemble0 :	24
+         remap :	remapped via ESMF_regrid_with_weights: Bilinear
+         missing_value :	1e+20
+         _FillValue :	1e+20
+
+      double lat ( lat )
+         units :	degrees_north
+         long_name :	latitude
+
+      double lon ( lon )
+         units :	degrees_east
+         long_name :	longitude
+
+      float u10m ( ncl3, lat, lon )
+         forecast_time4 :	744
+         initial_time :	12/01/2000 (00:00)
+         parameter_number :	165
+         parameter_table_version :	128
+         gds_grid_type :	0
+         level_indicator :	1
+         units :	m/s
+         long_name :	monthly forecast average u speed at 10m 1 0.25p
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         ensemble0 :	24
+         remap :	remapped via ESMF_regrid_with_weights: Bilinear
+         missing_value :	1e+20
+         _FillValue :	1e+20
+
+      float v10m ( ncl4, lat, lon )
+         forecast_time4 :	744
+         initial_time :	12/01/2000 (00:00)
+         parameter_number :	166
+         parameter_table_version :	128
+         gds_grid_type :	0
+         level_indicator :	1
+         units :	m/s
+         long_name :	monthly forecast average v speed at 10m 1 0.25p
+         center :	European Center for Medium-Range Weather Forecasts (RSMC)
+         ensemble0 :	24
+         remap :	remapped via ESMF_regrid_with_weights: Bilinear
+         missing_value :	1e+20
+         _FillValue :	1e+20
+
+ 
