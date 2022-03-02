@@ -6,12 +6,12 @@ import Ngl
 def fLists(iyear):
     if iyear == 2021:
         print("forecast 2021")
-        fname1 = "data_0.25_2021/wind202101.nc"
-        fname2 = "data_0.25_2021/wind202102.nc"
-        fname3 = "data_0.25_2021/wind202103.nc"
-        fname4 = "data_0.25_2021/wind202104.nc"
-        fname5 = "data_0.25_2021/wind202105.nc"
-        fname6 = "data_0.25_2021/wind202106.nc"
+        fname1 = "data_0.25_2021/wind_originforecast_202101.nc"
+        fname2 = "data_0.25_2021/wind_originforecast_202102.nc"
+        fname3 = "data_0.25_2021/wind_originforecast_202103.nc"
+        fname4 = "data_0.25_2021/wind_originforecast_202104.nc"
+        fname5 = "data_0.25_2021/wind_originforecast_202105.nc"
+        fname6 = "data_0.25_2021/wind_originforecast_202106.nc"
 
         fname1Era5 = "data_0.25_2021/ERA5Wind202101.nc"
         fname2Era5 = "data_0.25_2021/ERA5Wind202102.nc"
@@ -21,12 +21,12 @@ def fLists(iyear):
         fname6Era5 = "data_0.25_2021/ERA5Wind202106.nc"
     elif iyear == 2020:
         print("forecast 2020")
-        fname1 = "data_0.25_2020/wind202001.nc"
-        fname2 = "data_0.25_2020/wind202002.nc"
-        fname3 = "data_0.25_2020/wind202003.nc"
-        fname4 = "data_0.25_2020/wind202004.nc"
-        fname5 = "data_0.25_2020/wind202005.nc"
-        fname6 = "data_0.25_2020/wind202006.nc"
+        fname1 = "data_0.25_2020/wind_originforecast_202001.nc"
+        fname2 = "data_0.25_2020/wind_originforecast_202002.nc"
+        fname3 = "data_0.25_2020/wind_originforecast_202003.nc"
+        fname4 = "data_0.25_2020/wind_originforecast_202004.nc"
+        fname5 = "data_0.25_2020/wind_originforecast_202005.nc"
+        fname6 = "data_0.25_2020/wind_originforecast_202006.nc"
 
         fname1Era5 = "data_0.25_2020/ERA5Wind202001.nc"
         fname2Era5 = "data_0.25_2020/ERA5Wind202002.nc"
@@ -36,23 +36,6 @@ def fLists(iyear):
         fname6Era5 = "data_0.25_2020/ERA5Wind202006.nc"
     return fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2Era5, fname3Era5, fname4Era5, fname5Era5, fname6Era5
 
-# forecast
-# fname1 = "data_0.25_2020/wind202001.nc"
-# fname2 = "data_0.25_2020/wind202002.nc"
-# fname3 = "data_0.25_2020/wind202003.nc"
-# fname4 = "data_0.25_2020/wind202004.nc"
-# fname5 = "data_0.25_2020/wind202005.nc"
-# fname6 = "data_0.25_2020/wind202006.nc"
-
-# fname1Era5 = "data_0.25_2020/ERA5Wind202001.nc"
-# fname2Era5 = "data_0.25_2020/ERA5Wind202002.nc"
-# fname3Era5 = "data_0.25_2020/ERA5Wind202003.nc"
-# fname4Era5 = "data_0.25_2020/ERA5Wind202004.nc"
-# fname5Era5 = "data_0.25_2020/ERA5Wind202005.nc"
-# fname6Era5 = "data_0.25_2020/ERA5Wind202006.nc"
-
-# forecast f
-
 
 def plotyear(fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2Era5, fname3Era5, fname4Era5, fname5Era5, fname6Era5, iyear=2021):
     f1 = Nio.open_file(fname1, mode='r',
@@ -60,7 +43,7 @@ def plotyear(fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2E
 
     # Wind10_forecast =f.variables['10SI_GDS0_SFC']
     Wind10_forecast1 = f1.variables['windspeed']
-    print(Wind10_forecast1.shape)
+    # print(Wind10_forecast1.shape)
     # f2
     f2 = Nio.open_file(fname2, mode='r',
                        options=None, format='nc')
@@ -173,7 +156,7 @@ def plotyear(fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2E
     wks_type = "png"
     #wks = Ngl.open_wks(wks_type,"pic/Wind10_ensemble_forecast_minus_average",rlist)
     wks = Ngl.open_wks(
-        wks_type, "pic/Wind10_forecast_minus_ERA5_percent_model_"+str(iyear), rlist)
+        wks_type, "pic/Wind10_forecast_minus_ERA5_percent_nomodel"+str(iyear), rlist)
 
     # Turn off draw for the individual plots, since we are going to
     # panel them later.
@@ -235,8 +218,10 @@ def plotyear(fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2E
 
     # resources.cnLevelSelectionMode = "AutomaticLevels"   # Select contour levels. dyp
     resources.cnLevelSelectionMode = "ManualLevels"
-    resources.cnMinLevelValF = -50  # -1
-    resources.cnMaxLevelValF = 50  # 10
+    resources.cnMinLevelValF = -50
+    resources.cnMaxLevelValF = 50
+    # resources.cnMinLevelValF = -10
+    # resources.cnMaxLevelValF = 100
     resources.cnLevelSpacingF = 10
 
     resources.tmXBLabelFontHeightF = 0.020
@@ -331,7 +316,7 @@ def outputnc(varmatrix, imonth=1, year=2021):
     print("imonth in outputnc:%s" % imonth)
     import os
     outfilepath = os.path.join(
-        "data_0.25_"+str(year), "PercentWithLasso"+str(year)+"0"+str(imonth)+".nc")
+        "data_0.25_"+str(year), "PercentNoLasso"+str(year)+"0"+str(imonth)+".nc")
     print(outfilepath)
 
     if os.path.exists(outfilepath):
@@ -372,4 +357,4 @@ def main(iyear):
 
 
 if __name__ == '__main__':
-    main(iyear=2021)
+    main(iyear=2020)

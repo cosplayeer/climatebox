@@ -6,52 +6,35 @@ import Ngl
 def fLists(iyear):
     if iyear == 2021:
         print("forecast 2021")
-        fname1 = "data_0.25_2021/wind202101.nc"
-        fname2 = "data_0.25_2021/wind202102.nc"
-        fname3 = "data_0.25_2021/wind202103.nc"
-        fname4 = "data_0.25_2021/wind202104.nc"
-        fname5 = "data_0.25_2021/wind202105.nc"
-        fname6 = "data_0.25_2021/wind202106.nc"
+        fname1 = "data_0.25_2021/PercentNoLasso202101.nc"
+        fname2 = "data_0.25_2021/PercentNoLasso202102.nc"
+        fname3 = "data_0.25_2021/PercentNoLasso202103.nc"
+        fname4 = "data_0.25_2021/PercentNoLasso202104.nc"
+        fname5 = "data_0.25_2021/PercentNoLasso202105.nc"
+        fname6 = "data_0.25_2021/PercentNoLasso202106.nc"
 
-        fname1Era5 = "data_0.25_2021/ERA5Wind202101.nc"
-        fname2Era5 = "data_0.25_2021/ERA5Wind202102.nc"
-        fname3Era5 = "data_0.25_2021/ERA5Wind202103.nc"
-        fname4Era5 = "data_0.25_2021/ERA5Wind202104.nc"
-        fname5Era5 = "data_0.25_2021/ERA5Wind202105.nc"
-        fname6Era5 = "data_0.25_2021/ERA5Wind202106.nc"
+        fname1Era5 = "data_0.25_2021/PercentWithLasso202101.nc"
+        fname2Era5 = "data_0.25_2021/PercentWithLasso202102.nc"
+        fname3Era5 = "data_0.25_2021/PercentWithLasso202103.nc"
+        fname4Era5 = "data_0.25_2021/PercentWithLasso202104.nc"
+        fname5Era5 = "data_0.25_2021/PercentWithLasso202105.nc"
+        fname6Era5 = "data_0.25_2021/PercentWithLasso202106.nc"
     elif iyear == 2020:
         print("forecast 2020")
-        fname1 = "data_0.25_2020/wind202001.nc"
-        fname2 = "data_0.25_2020/wind202002.nc"
-        fname3 = "data_0.25_2020/wind202003.nc"
-        fname4 = "data_0.25_2020/wind202004.nc"
-        fname5 = "data_0.25_2020/wind202005.nc"
-        fname6 = "data_0.25_2020/wind202006.nc"
+        fname1 = "data_0.25_2020/PercentNoLasso202001.nc"
+        fname2 = "data_0.25_2020/PercentNoLasso202002.nc"
+        fname3 = "data_0.25_2020/PercentNoLasso202003.nc"
+        fname4 = "data_0.25_2020/PercentNoLasso202004.nc"
+        fname5 = "data_0.25_2020/PercentNoLasso202005.nc"
+        fname6 = "data_0.25_2020/PercentNoLasso202006.nc"
 
-        fname1Era5 = "data_0.25_2020/ERA5Wind202001.nc"
-        fname2Era5 = "data_0.25_2020/ERA5Wind202002.nc"
-        fname3Era5 = "data_0.25_2020/ERA5Wind202003.nc"
-        fname4Era5 = "data_0.25_2020/ERA5Wind202004.nc"
-        fname5Era5 = "data_0.25_2020/ERA5Wind202005.nc"
-        fname6Era5 = "data_0.25_2020/ERA5Wind202006.nc"
+        fname1Era5 = "data_0.25_2020/PercentWithLasso202001.nc"
+        fname2Era5 = "data_0.25_2020/PercentWithLasso202002.nc"
+        fname3Era5 = "data_0.25_2020/PercentWithLasso202003.nc"
+        fname4Era5 = "data_0.25_2020/PercentWithLasso202004.nc"
+        fname5Era5 = "data_0.25_2020/PercentWithLasso202005.nc"
+        fname6Era5 = "data_0.25_2020/PercentWithLasso202006.nc"
     return fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2Era5, fname3Era5, fname4Era5, fname5Era5, fname6Era5
-
-# forecast
-# fname1 = "data_0.25_2020/wind202001.nc"
-# fname2 = "data_0.25_2020/wind202002.nc"
-# fname3 = "data_0.25_2020/wind202003.nc"
-# fname4 = "data_0.25_2020/wind202004.nc"
-# fname5 = "data_0.25_2020/wind202005.nc"
-# fname6 = "data_0.25_2020/wind202006.nc"
-
-# fname1Era5 = "data_0.25_2020/ERA5Wind202001.nc"
-# fname2Era5 = "data_0.25_2020/ERA5Wind202002.nc"
-# fname3Era5 = "data_0.25_2020/ERA5Wind202003.nc"
-# fname4Era5 = "data_0.25_2020/ERA5Wind202004.nc"
-# fname5Era5 = "data_0.25_2020/ERA5Wind202005.nc"
-# fname6Era5 = "data_0.25_2020/ERA5Wind202006.nc"
-
-# forecast f
 
 
 def plotyear(fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2Era5, fname3Era5, fname4Era5, fname5Era5, fname6Era5, iyear=2021):
@@ -60,7 +43,7 @@ def plotyear(fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2E
 
     # Wind10_forecast =f.variables['10SI_GDS0_SFC']
     Wind10_forecast1 = f1.variables['windspeed']
-    print(Wind10_forecast1.shape)
+    # print(Wind10_forecast1.shape)
     # f2
     f2 = Nio.open_file(fname2, mode='r',
                        options=None, format='nc')
@@ -114,34 +97,36 @@ def plotyear(fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2E
     # for i in range(6):
     # commended dyp 4 lines
     wind10_result_percent1 = np.subtract(
-        Wind10_forecast1, Wind10_era5_01)
-    wind10_result_percent1 = np.divide(
-        wind10_result_percent1, Wind10_era5_01) * 100
+        np.abs(Wind10_forecast1), np.abs(Wind10_era5_01))
+    # wind10_result_percent1 = np.divide(
+    #     wind10_result_percent1, np.abs(Wind10_era5_01))    # * 100
 
     wind10_result_percent2 = np.subtract(
-        Wind10_forecast2, Wind10_era5_02)
-    wind10_result_percent2 = np.divide(
-        wind10_result_percent2, Wind10_era5_02) * 100
+        np.abs(Wind10_forecast2), np.abs(Wind10_era5_02))
+    # wind10_result_percent2 = np.divide(
+    #     wind10_result_percent2, np.abs(Wind10_era5_02))   # * 100
 
     wind10_result_percent3 = np.subtract(
-        Wind10_forecast3, Wind10_era5_03)
-    wind10_result_percent3 = np.divide(
-        wind10_result_percent3, Wind10_era5_03) * 100
+        np.abs(Wind10_forecast3), np.abs(Wind10_era5_03))
+    # wind10_result_percent3 = np.divide(
+    #     wind10_result_percent3, np.abs(Wind10_era5_03))   # * 100
 
     wind10_result_percent4 = np.subtract(
-        Wind10_forecast4, Wind10_era5_04)
-    wind10_result_percent4 = np.divide(
-        wind10_result_percent4, Wind10_era5_04) * 100
+        np.abs(Wind10_forecast4), np.abs(Wind10_era5_04))
+    # wind10_result_percent4 = np.divide(
+    #     wind10_result_percent4, np.abs(Wind10_era5_04))    # * 100
 
     wind10_result_percent5 = np.subtract(
-        Wind10_forecast5, Wind10_era5_05)
-    wind10_result_percent5 = np.divide(
-        wind10_result_percent5, Wind10_era5_05) * 100
+        np.abs(Wind10_forecast5), np.abs(Wind10_era5_05))
+    # wind10_result_percent5 = np.divide(
+    #     wind10_result_percent5, np.abs(Wind10_era5_05))    # * 100
 
     wind10_result_percent6 = np.subtract(
-        Wind10_forecast6, Wind10_era5_06)
-    wind10_result_percent6 = np.divide(
-        wind10_result_percent6, Wind10_era5_06) * 100
+        np.abs(Wind10_forecast6), np.abs(Wind10_era5_06))
+    # wind10_result_percent6 = np.divide(
+    #     wind10_result_percent6, np.abs(Wind10_era5_06))    # * 100
+    print(np.max(wind10_result_percent4))
+    print(np.min(wind10_result_percent4))
 
     # Access the temperature arrays for the first 6 time steps.
     # 6 x 4
@@ -171,9 +156,9 @@ def plotyear(fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2E
     # --- Indicate where to send graphics
     rlist = Ngl.Resources()
     wks_type = "png"
-    #wks = Ngl.open_wks(wks_type,"pic/Wind10_ensemble_forecast_minus_average",rlist)
+    # wks = Ngl.open_wks(wks_type,"pic/Wind10_ensemble_forecast_minus_average",rlist)
     wks = Ngl.open_wks(
-        wks_type, "pic/Wind10_forecast_minus_ERA5_percent_model_"+str(iyear), rlist)
+        wks_type, "pic/abs_Wind10_NoModel_minus_Model_percent_"+str(iyear), rlist)
 
     # Turn off draw for the individual plots, since we are going to
     # panel them later.
@@ -225,7 +210,8 @@ def plotyear(fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2E
     #
     # del resources.tiMainString  # Don't set a main title.
 
-    resources.cnFillPalette = cmap  # Set color map using RGB values
+    # cmap  # Set color map using RGB values
+    resources.cnFillPalette = "radar"
     resources.sfXArray = lon  # Portion of map on which to overlay
     resources.sfYArray = lat  # contour plot.
 
@@ -235,9 +221,9 @@ def plotyear(fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2E
 
     # resources.cnLevelSelectionMode = "AutomaticLevels"   # Select contour levels. dyp
     resources.cnLevelSelectionMode = "ManualLevels"
-    resources.cnMinLevelValF = -50  # -1
-    resources.cnMaxLevelValF = 50  # 10
-    resources.cnLevelSpacingF = 10
+    resources.cnMinLevelValF = 0  # -1000000
+    resources.cnMaxLevelValF = 40
+    resources.cnLevelSpacingF = 5
 
     resources.tmXBLabelFontHeightF = 0.020
     resources.tmYLLabelFontHeightF = 0.020
@@ -289,8 +275,9 @@ def plotyear(fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2E
     panelres.nglPanelLabelBarLabelFontHeightF = 0.015    # Labelbar font height
     panelres.nglPanelLabelBarHeightF = 0.0750  # 0.1750   # Height of labelbar
     panelres.nglPanelLabelBarWidthF = 0.700    # Width of labelbar
+    panelres.nglPanelLjjjx1.
     panelres.lbLabelFont = "helvetica-bold"  # Labelbar font
-    panelres.nglPanelTop = 0.935
+    panelres.nglPanelTop = 0.955  # 0.935
     panelres.nglPanelFigureStrings = ["1", "2", "3", "4", "5", "6", "G", "H", "I", "J", "K", "L", "M", "N",
                                       "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X"]
     panelres.nglPanelFigureStringsJust = "BottomRight"
@@ -314,7 +301,7 @@ def plotyear(fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2E
     # Ngl.panel(wks,plot[0:nplots],[8,6],panelres)
 
     Ngl.end()
-    return wind10_result_percent1, wind10_result_percent2, wind10_result_percent3, wind10_result_percent4, wind10_result_percent5, wind10_result_percent6
+    # return wind10_result_percent1, wind10_result_percent2, wind10_result_percent3, wind10_result_percent4, wind10_result_percent5, wind10_result_percent6
     # print(wind10_result_percent1.shape)
 
 
@@ -331,7 +318,7 @@ def outputnc(varmatrix, imonth=1, year=2021):
     print("imonth in outputnc:%s" % imonth)
     import os
     outfilepath = os.path.join(
-        "data_0.25_"+str(year), "PercentWithLasso"+str(year)+"0"+str(imonth)+".nc")
+        "data_0.25_"+str(year), "PercnetNoLasso"+str(year)+"0"+str(imonth)+".nc")
     print(outfilepath)
 
     if os.path.exists(outfilepath):
@@ -361,15 +348,17 @@ def outputnc(varmatrix, imonth=1, year=2021):
 
 def main(iyear):
     f1, f2, f3, f4, f5, f6, f12, f22, f32, f42, f52, f62 = fLists(iyear=iyear)
-    v1, v2, v3, v4, v5, v6 = plotyear(fname1=f1, fname2=f2, fname3=f3, fname4=f4, fname5=f5, fname6=f6, fname1Era5=f12,
-                                      fname2Era5=f22, fname3Era5=f32, fname4Era5=f42, fname5Era5=f52, fname6Era5=f62, iyear=iyear)
-    outputnc(v1, imonth=1, year=iyear)
-    outputnc(v2, imonth=2, year=iyear)
-    outputnc(v3, imonth=3, year=iyear)
-    outputnc(v4, imonth=4, year=iyear)
-    outputnc(v5, imonth=5, year=iyear)
-    outputnc(v6, imonth=6, year=iyear)
+    plotyear(fname1=f1, fname2=f2, fname3=f3, fname4=f4, fname5=f5, fname6=f6, fname1Era5=f12,
+             fname2Era5=f22, fname3Era5=f32, fname4Era5=f42, fname5Era5=f52, fname6Era5=f62, iyear=iyear)
+    # v1, v2, v3, v4, v5, v6 = plotyear(fname1=f1, fname2=f2, fname3=f3, fname4=f4, fname5=f5, fname6=f6, fname1Era5=f12,
+    #                                   fname2Era5=f22, fname3Era5=f32, fname4Era5=f42, fname5Era5=f52, fname6Era5=f62, iyear=iyear)
+    # outputnc(v1, imonth=1, year=iyear)
+    # outputnc(v2, imonth=2, year=iyear)
+    # outputnc(v3, imonth=3, year=iyear)
+    # outputnc(v4, imonth=4, year=iyear)
+    # outputnc(v5, imonth=5, year=iyear)
+    # outputnc(v6, imonth=6, year=iyear)
 
 
 if __name__ == '__main__':
-    main(iyear=2021)
+    main(iyear=2020)

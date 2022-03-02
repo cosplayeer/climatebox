@@ -4,3 +4,8 @@ grpc
 *nc
 *.csv
 *.tar
+*log*
+*.gz
+*.tar
+*.txt
+*bak

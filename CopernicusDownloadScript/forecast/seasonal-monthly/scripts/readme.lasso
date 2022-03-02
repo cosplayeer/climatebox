@@ -26,9 +26,21 @@
     ２．区域
 
     ３．输出
-6. 对５和６的结果做对比　compareEcERA5.py
+6. 对５和６的结果做对比　compareEcERA5.py　未完成x
     读入
     输出:
-        ｃｓｖ
+        png nc ｃｓｖ
 ７．图谱
+    ReadGribandNCPlotNGLmonth2021.py
+8. 检测未训练的２０２１年１－６月的对比图
+    1. ERA5观测位置不变data_0.25_2021/
+    2.　预报资料位置　data_0.25/monthly-forecast-wind201912-1-0.25p.nc 
+        只提取中国经纬度范围内：　output2021nc.py
+    3.  画图　ReadGribandNCPlotNGLmonth2021noLasso.py
+    
+9.未训练点减去训练过的：
+    ReadGribandNCPlotNGLmonth2021.py :after
+    ReadGribandNCPlotNGLmonth2021noLasso.py : before
+    ReadGribandNCPlotNGLmonth2021plot2.py : minus
+
 
