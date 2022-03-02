@@ -18,8 +18,16 @@
     20201202
     20201203
     20201204
-    20201201
-    20201201
+    20201205
+    20201206
+    diff lassoTest202012.py lassoTest202012-02.py:
+    <     varSpeed = circle2021(imonth=1)
+    ---
+    >     varSpeed = circle2021(imonth=2)
+    326c326
+    <     outputnc(varSpeed, imonth=1, year=2021)
+    ---
+    >     outputnc(varSpeed, imonth=2, year=2021)
 5. 2021年１－６月ERA5资料　reverseERA5.py
     １．位置
     data_0.25/WindSpeed10mERA5monthly.grib　　９０　to -90,需换成从南到北

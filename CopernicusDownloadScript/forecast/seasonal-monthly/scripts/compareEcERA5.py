@@ -73,9 +73,9 @@ def outputnc(varmatrix, imonth=1, year=2021):
 
 
 if __name__ == '__main__':
-    outputnc(spd10mObs01)
-    outputnc(spd10mObs01, imonth=2)
-    outputnc(spd10mObs01, imonth=3)
-    outputnc(spd10mObs01, imonth=4)
-    outputnc(spd10mObs01, imonth=5)
-    outputnc(spd10mObs01, imonth=6)
+    outputnc(spd10mObs01, imonth=1, year=2021)
+    outputnc(spd10mObs02, imonth=2, year=2021)
+    outputnc(spd10mObs03, imonth=3, year=2021)
+    outputnc(spd10mObs04, imonth=4, year=2021)
+    outputnc(spd10mObs05, imonth=5, year=2021)
+    outputnc(spd10mObs06, imonth=6, year=2021)

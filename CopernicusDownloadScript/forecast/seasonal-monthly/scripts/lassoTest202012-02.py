@@ -321,7 +321,7 @@ def test_multiPoint_0p25():
 
 
 if __name__ == '__main__':
-    varSpeed = circle2021(imonth=1)
+    varSpeed = circle2021(imonth=2)
     # varSpeed = test_varSpeed2()
-    outputnc(varSpeed, imonth=1, year=2021)
+    outputnc(varSpeed, imonth=2, year=2021)
     # test_1point_0p25(ecmonth=1)

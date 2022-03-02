@@ -22,9 +22,12 @@ def filter_lists():
         file_list.append(os.path.join('data_0.25', _f))
     return file_list
 
+# [16:19] 和年份相关
+
 
 def lasso_model(f1, f2, ilat, jlon, imonth=1):
     # 1. 读入实测
+    # 2000-2021, 为了和forecast数组对齐，从2001年开始算起
     # fname = "data_0.25/WindSpeed10mERA5monthly.grib"
     # f = Nio.open_file(fname)
     # print(f.variables["10SI_GDS0_SFC_S123"])
@@ -35,9 +38,11 @@ def lasso_model(f1, f2, ilat, jlon, imonth=1):
     # print(np.size(spd10mObs))
     spd10mObsArray = np.zeros(21, np.float16)
     for i in range(21):
-        # 从第六行开始，每次跳过６行，即为imonth月份结果
-        spd10mObsArray[i] = spd10mObs[i*6+imonth-1]
-        spd10mObsArrayPandas = spd10mObsArray[17:20]  # 18 19 20 年
+        # 从第六行开始，每次跳过６行，ＥＲＡ５ 200101 - 202101
+        spd10mObsArray[i] = spd10mObs[i*6+imonth-1]  # 200101 i=0
+        #  202101 i=20 截取21年
+        #  201901 i=18 取前三年17, 18, 19　目标２０１９
+        spd10mObsArrayPandas = spd10mObsArray[16:19]
     # print(spd10mObsArrayPandas)
 
     # 2. 读入21年点预报 multiple;2001---2021 21years goal:2022nian
@@ -48,9 +53,9 @@ def lasso_model(f1, f2, ilat, jlon, imonth=1):
     # years, members
     # 16:21 is better than :21
     # :5 :25差不多
-    # 最近点3年１8，19，２0年，１５个集合成员
+    # 最近点3年１8，19，２0年，# 18:21 １５个集合成员
     spd10mPart = f2.variables["speed10"][:, :, 372: 577, 292: 545]
-    spd10mFor = spd10mPart[17:20, :15, ilat, jlon]  # 18 19 20 年
+    spd10mFor = spd10mPart[16:19, :15, ilat, jlon]
     # print((spd10mFor.shape))
     # spd10mForPandas = pd.DataFrame(spd10mFor)  # １
     spd10mForPandas = spd10mFor  # ２
@@ -78,14 +83,18 @@ def test_predict_model_result(f3, model, ilat, jlon, imonth=1):
     # 从２０２１年点预测资料对比ＥＲＡ５结果是否正确预测
     #　０．２５度格点
     #   １度格点
-    # ncl_join = 21 2000-2020
+    # ncl_join = 21 2000-2020　
     #   ncl0 = 51
     #   lat = 721
     #   lon = 1440
     fname3 = "data_0.25/output1-monthly-forecast-wind-21years-0.25p.nc"
+    # 2000/12/1 - 2020/12/1 预报
+    # 2001/1/1 to /6/1  - 2021/1/1 to /6/1  #2022/1/1单独存放
+    # i=20: 2021/1/1; i=19 2020/1/1
     f3 = Nio.open_file(fname3)
-    testyearIndex = 20
+    testyearIndex = 18 + 1
     spd10mTestArray = f3.variables["speed10"][testyearIndex, :15, ilat, jlon]
+    predictorg = f3.variables["speed10"][testyearIndex, 0, ilat, jlon]
     spd10mTestArrayT = pd.DataFrame(spd10mTestArray).T  # convert 15x1 1x15
     # print(spd10mTestArrayT.as_matrix())
     # print(spd10mTestArrayT.shape)
@@ -108,10 +117,11 @@ def test_predict_model_result(f3, model, ilat, jlon, imonth=1):
     _result = model.predict(np.array(spd10mTestArrayT))
     f3.close()
     print("predict result is: %s" % _result)
-    print("test year index: %s" % testyearIndex)
+    print("predict org is %s" % predictorg)
+    print("test forecast year index: %s" % testyearIndex)
 
 
-def predict_model_result_2021(f3, model, ilat, jlon, imonth=1):
+def predict_model_result_2020(f3, model, ilat, jlon, imonth=1):
     # 从２０２１年点预测资料对比ＥＲＡ５结果是否正确预测
     #　０．２５度格点
     #   １度格点
@@ -119,24 +129,22 @@ def predict_model_result_2021(f3, model, ilat, jlon, imonth=1):
     #   ncl0 = 51
     #   lat = 721
     #   lon = 1440
-    # common f3 Nio open_file
-    # fname3 = "data_0.25/output1-monthly-forecast-wind-21years-0.25p.nc"
-    # f3 = Nio.open_file(fname3)
-    testyearIndex = 20  # predict 202101-202106, 对比ＥＲＡ５同时期
+    # 2000/12/1 - 2020/12/1 预报
+    # 2001/1/1 to /6/1  - 2021/1/1 to /6/1  #2022/1/1单独存放
+    # i=20: 2021/1/1; i=19 2020/1/1
+    testyearIndex = 19  # predict 202101-202106, 对比ＥＲＡ５同时期
     spd10mTestArrayPart = f3.variables["speed10"][testyearIndex,
                                                   :15, 372: 577, 292: 545]
     spd10mTestArray = spd10mTestArrayPart[:, ilat, jlon]
+    # predictorg = f3.variables["speed10"][testyearIndex, 0, ilat, jlon]
     spd10mTestArrayT = pd.DataFrame(spd10mTestArray).T  # convert 15x1 1x15
-    # 4. 测试一个网格点
-    # print(spd10mForPandas.iloc[[2]])
-    # result202201 = model.predict(
-    #     spd10mForPandas.iloc[[2]])  # , np.newaxis)
-    # print(result202201)
-    # print(spd10mObsArrayPandas.iloc[[2]])
+
     _result = model.predict(np.array(spd10mTestArrayT))
     # print(_result)
     # f3.close()
     # print("predict result is: %s" % _result)
+    # print("predict org is %s" % predictorg)
+
     return _result
 
 
@@ -170,12 +178,12 @@ def predict_model_result(f3, model, ilat, jlon):
 
 
 # 5. 循环网格点
-def circle2021(imonth=1):
+def circle2020(imonth=1):
     print("imonth in circle is %s" % imonth)
     # 1. 读入实测
     fname = "data_0.25/WindSpeed10mERA5monthly.grib"
     f1 = Nio.open_file(fname)
-    # lassoMerge.sh
+    # lassoMerge.sh 对应ERA5时间:2001-2021 共21成员
     fname2 = "data_0.25/output" + \
         str(imonth) + "-monthly-forecast-wind-21years-0.25p.nc"
     f2 = Nio.open_file(fname2)
@@ -194,7 +202,7 @@ def circle2021(imonth=1):
             print("jlon:%s" % j)
             # print(float(predict_model_result(_model, ilat=i, jlon=j)))
             test_matrix[i, j] = float(
-                predict_model_result_2021(f3, model=_model, ilat=i, jlon=j, imonth=imonth))
+                predict_model_result_2020(f3, model=_model, ilat=i, jlon=j, imonth=imonth))
             # test_matrix[i, j] = float(3)
     return test_matrix
 
@@ -228,11 +236,10 @@ def circle(imonth=1):
 
 
 # ６. 输出ｎｃ
-def outputnc(varmatrix, imonth=1, year=2022):
-    fname3 = "data_0.25_2022/monthly-forecast-wind202112-" + \
-        str(imonth) + "-0.25p.nc"
+def outputnc(varmatrix, imonth=1, year=2020):
+    # template, no change
+    fname3 = "data_0.25_2022/monthly-forecast-wind202112-1-0.25p.nc"
     f3 = Nio.open_file(fname3)
-    spdTemplate = f3.variables["Speed10m"]  # [0, 372:577, 292:545]
     latorg = f3.variables["lat"]
     lonorg = f3.variables["lon"]
     lat = f3.variables["lat"][372:577]
@@ -243,7 +250,7 @@ def outputnc(varmatrix, imonth=1, year=2022):
     # os.system("rm data_0.25_2022/wind20220".nc")
     import os
     outfilepath = os.path.join(
-        "data_0.25_2022", "wind"+str(year)+"0"+str(imonth)+".nc")
+        "data_0.25_"+str(year), "wind"+str(year)+"0"+str(imonth)+".nc")
     print(outfilepath)
     # print(type(outfilepath))
     if os.path.exists(outfilepath):
@@ -311,7 +318,7 @@ def test_1point_0p25(ecmonth=1):
     _model = lasso_model(f1=f1, f2=f2, ilat=402, jlon=1002, imonth=ecmonth)
     result = test_predict_model_result(
         f3=f3, model=_model, ilat=402, jlon=1002, imonth=ecmonth)
-    print("result is:%s" % result)
+    # print("result is:%s" % result)
     f1.close()
     f2.close()
 
@@ -321,7 +328,7 @@ def test_multiPoint_0p25():
 
 
 if __name__ == '__main__':
-    varSpeed = circle2021(imonth=1)
+    varSpeed = circle2020(imonth=6)
     # varSpeed = test_varSpeed2()
-    outputnc(varSpeed, imonth=1, year=2021)
+    outputnc(varSpeed, imonth=6, year=2020)
     # test_1point_0p25(ecmonth=1)
