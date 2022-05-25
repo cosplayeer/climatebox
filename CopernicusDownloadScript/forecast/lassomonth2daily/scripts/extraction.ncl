@@ -9,10 +9,27 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/contrib/cd_inv_string.ncl"
 ; yearfrom="2019"
 ; targetmonth="202002"
 
-yearfrom="2020"
-targetmonth="202102"
+yearfrom="2022"
+monthfrom="04"
+targetmonth="202206"
+;diqingyuan
+; xo = (/ 109.202914 /)
+; yo = (/ 37.6528 /)
 
-fil = "data/ec"+yearfrom+"12"+"_"+targetmonth+"_global.grib"
+datatype="NewHuadiankushui"
+xo = (/ 95.2555 /)
+yo = (/ 42.5754 /)
+;
+datatype="Naomaohu"
+xo = (/ 94.9144 /)
+yo = (/ 43.6945 /)
+; ;
+datatype="xinjiangsantanghu1qi"
+xo = (/ 93.2372 /)
+yo = (/ 44.1552 /)
+
+; fil = "data/ec"+yearfrom+monthfrom+"_"+targetmonth+"_global.grib"
+fil = "data/Seasonal_2month_daily"+yearfrom+monthfrom+"01"+"future2month.grib"
 
 a=addfile(fil, "r")
 u10_temp = a->10U_GDS0_SFC
@@ -23,16 +40,11 @@ pressure = a->MSL_GDS0_SFC(0,:,::-1,:) /100
 t2m = a->2T_GDS0_SFC(0,:,::-1,:) -273.15
 density = pressure * 0.1 * 3.4837 / (t2m + 273.15)
 t = a->forecast_time1 ;6,12,18,24
-t@units = "hours since "+yearfrom+"-12-01 00:00:0.0"
+t@units = "hours since "+yearfrom+"-"+ monthfrom+"-01 00:00:0.0"
 printVarSummary(t)
 xi = a->g0_lon_3 ;124,125
 yi = a->g0_lat_2(::-1) ;43,42
-;diqingyuan
-xo = (/ 109.202914 /)
-yo = (/ 37.6528 /)
-;jianggongling
-xo = (/ 116.1528 /)
-yo = (/ 29.4395 /)
+
 U10point = linint2_points(xi, yi, u10, True, xo, yo, 0)
 V10point = linint2_points(xi, yi, v10, True, xo, yo, 0)
 pressurepoint = linint2_points(xi, yi, pressure, True, xo, yo, 0)
@@ -42,9 +54,9 @@ wind10 = sqrt(U10point^2 + V10point^2)
 winddir10 = wind_direction(U10point, V10point,0)
 
 ; ;output csv
-datatype="ecmwf_jianggongling"
 
-outputname = "text/" + datatype + "_" + targetmonth + ".csv" 
+
+outputname = "text/" + "ecmwf_" + datatype + "_" + targetmonth + ".csv" 
 foutf =  outputname
 ; output header
 if (fileexists(foutf)) then

@@ -46,9 +46,29 @@
         只提取中国经纬度范围内：　output2021nc.py
     3.  画图　ReadGribandNCPlotNGLmonth2021noLasso.py
     
-9.未训练点减去训练过的：
+9.未训练的减去训练过的：
     ReadGribandNCPlotNGLmonth2021.py :after
     ReadGribandNCPlotNGLmonth2021noLasso.py : before
     ReadGribandNCPlotNGLmonth2021plot2.py : minus
+
+二　单点
+    结合实际测风数据
+    1.	修改模型为时间序列模型，可以输出逐小时的时间切片图谱。（3周）
+
+
+    2.	MCP模型训练  从半年/9个月预报- 推测一年的预报 （3周）
+        2.1 Csrf 9个月预报：/home/meteodyn/DYP/climatebox/csfv2/scripts
+        2.2 阅读相关ＭＣＰ文献
+
+
+    
+    3.	辐射变量的6个月预报订正（2-3周）
+        3.1 下载辐射变量
+
+    4.	点到面：将多点观测应用到模型中，对一片区域进行订正（3周）
+        4.1 单点应用订正
+       
+        
+
 
 

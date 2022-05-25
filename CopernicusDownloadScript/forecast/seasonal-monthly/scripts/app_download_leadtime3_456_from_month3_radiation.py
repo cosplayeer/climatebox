@@ -4,9 +4,9 @@ import cdsapi
 # year: 1999-2019
 
 def main():
-    monthlists = ['12']
+    monthlists = ['06']
     # for iyear in range(2000,2002):
-    for iyear in range(2007, 2008):
+    for iyear in range(2021, 2022):
         for imonth in monthlists:
             print("downloading " + str(iyear) + str(imonth))
             c = cdsapi.Client()

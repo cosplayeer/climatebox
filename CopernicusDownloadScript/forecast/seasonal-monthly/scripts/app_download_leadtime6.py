@@ -4,7 +4,7 @@ import cdsapi
 # year: 1999-2019
 
 def main():
-    monthlists = ['1２']
+    monthlists = ['06']
     for iyear in range(2021, 2022):
         # for iyear in range(2020,2021):
         for imonth in monthlists:
@@ -17,7 +17,7 @@ def main():
                     'originating_centre': 'ecmwf',
                     'system': '5',
                     'variable': [
-                        # '10m_u_component_of_wind', '10m_v_component_of_wind',
+                        '10m_u_component_of_wind', '10m_v_component_of_wind',
                         '10m_wind_speed',
                         # '10m_wind_gust_since_previous_post_processing',
                     ],

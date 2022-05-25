@@ -12,9 +12,9 @@ import matplotlib.pyplot as plt
 # observation
 
 
-def getdf():
+def getdf(fname, fmonth):
     # merge && readin csvs
-    csvdir = "./text/"
+    csvdir = os.path.join("text_split", fname)
     # 202105->20210x
     # 2020-0x -> 2020-0x
     # 2021-0x -> 2021-0x
@@ -23,7 +23,7 @@ def getdf():
     # 03-30->0x-30
     # 28*4->31x4
     # flists = ["jianggongling2018-2021obs6hourlyUTC0month2.csv"]
-    flists = ["jianggongling2018-2021obs6hourlyUTC0month2.csv"]
+    flists = [str(fmonth)]
 
     df = pd.DataFrame(columns=['speed'], dtype=object)
     for i in range(len(flists)):
@@ -42,11 +42,11 @@ def getdf():
 # ecmwf forecast 10m wind.
 
 
-def getdf10m():
+def getdf10m(fname):
     # merge && readin csvs
     csvdir = "./text/"
 
-    flists = ["ecmwf_jianggongling_6_bak.csv"]  # jianggongling _bak.csv
+    flists = [fname]  # jianggongling _bak.csv
     # flists = ["ecmwf_jianggongling_202102.csv"]
 
     df = pd.DataFrame(columns=['speed'], dtype=object)
@@ -167,14 +167,22 @@ class arima_model:
 
 
 def test():
-    ts = getdf()
-    # print(ts)
+    ts = getdf(fname="obsHuadiankushuiUTC0-6hourly.txt", fmonth=2)
+    print(ts)
     # pass
 
 
-def main():
-    ts = getdf()
-    ts2 = getdf10m()
+def main(outname, year2, wdays, fmonth):
+    month2 = '%02d' % (fmonth)
+    fname = "obs" + outname + "UTC0-6hourly.txt"
+    ts = getdf(fname=fname, fmonth=fmonth)
+    ecname = "ecmwf_" + outname + "_" + year2 + month2 + ".csv"
+    print(ecname)
+    ts2 = getdf10m(fname=ecname)
+    # print("ts2 in 182:")
+    # print(ts2)
+    # outname = "huadiankushui"
+    # year2 = '2021'
     # 数据预处理
     ts_log = np.log(ts)
     # rol_mean = ts_log.rolling(window=28*4).mean()
@@ -213,7 +221,7 @@ def main():
     # plt.show()
 
  # 6.完善ＡＲＩＭＡ模型
-    # 差分操作
+    # 差分操作 version 2
 
     def diff_ts(ts, d):
         global shift_ts_list
@@ -253,14 +261,17 @@ def main():
         return tmp_data
 
     # 差分数据处理
-    diffed_ts = diff_ts(ts_log, d=[28*4, 1])
+    diffed_ts = diff_ts(ts_log, d=[wdays*4, 1])
     model = arima_model(diffed_ts)
     # # model.certain_model(0, 1)
     model.get_proper_model()
     predict_ts = model.properModel.predict()
-    diff_recover_ts = predict_diff_recover(predict_ts, d=[28*4, 1])
+    diff_recover_ts = predict_diff_recover(predict_ts, d=[wdays*4, 1])
     log_recover = np.exp(diff_recover_ts)
-    log_recover_train = log_recover[:'2020-02-28 18:00:00']  # dyp
+    log_recover_train = log_recover[:year2 +
+                                    '-'+month2+'-01 00:00:00'][:-1]  # dyp
+    # log_recover_train = log_recover[:'2020' +
+    #                                 '-'+month2+'-28 18:00:00']  # dyp true
     # # print(ts_log)
     # print(log_recover_train)
 
@@ -275,8 +286,7 @@ def main():
     ts_train_df = pd.DataFrame(ts_train)
     log_recover_train_df = log_recover_train_df.set_index(newindex)
     ts_train_df = ts_train_df.set_index(newindex)
-    # print("hi")
-    # print(log_recover_train_df.index)
+
     num = 10
     plt.figure(facecolor='white')
     # plt.xticks(np.arange(ts_train.index.shape[0]), ts_train.index)
@@ -288,7 +298,7 @@ def main():
     plt.legend(loc='best')
     plt.title('RMSE: %.4f' % np.sqrt(
         sum((log_recover_train-ts_train)**2)/ts_train.size))
-    plt.savefig('pic/Figure_wind_2021_test_jianggongling_month2.png')
+    plt.savefig('pic/Figure_wind_test_' + outname + '_month' + month2+'.png')
 
     # 7. 滚动预测
 
@@ -311,27 +321,27 @@ def main():
         fc = model.forecast_next_day_value(type)
         return predict_diff_recover(fc, [12, 1])
 
-    # print(ts_log)
     # 滚动向外预测,以２０２１七月以前的为训练集，７－１２月为测试集
-    ts_train = ts_log[:'2020-02-28 18:00:00']
-    ts_test = ts_log['2021-02-01 00:00:00':]
-
-    diffed_ts = diff_ts(ts_train, [28*4, 1])
+    # ts_train = ts_log[:'2020'+'-'+month2+'-28 18:00:00']
+    ts_train = ts_log[:year2+'-'+month2+'-01 00:00:00'][:-1]
+    ts_test = ts_log[year2+'-'+month2+'-01 00:00:00':]
+    diffed_ts = diff_ts(ts_train, [wdays*4, 1])
     forecast_list = []
 
     for i, dta in enumerate(ts_test):
-        # if i % (28*4) == 0:
+        # if i % (30*4) == 0:
         model = arima_model(diffed_ts)
-        model.certain_model(0, 2)
+        model.certain_model(0, 2)  # dyp
+        # model.get_proper_model()
 
         forecast_data = forecast_next_day_data(model, type='month')
         forecast_list.append(forecast_data)
-        add_today_data(model, ts_train, dta, [28*4, 1], type='month')
+        add_today_data(model, ts_train, dta, [wdays*4, 1], type='month')
 
     predict_ts = pd.Series(
-        data=forecast_list, index=ts['2021-02-01 00:00:00':].index)
+        data=forecast_list, index=ts[year2+'-'+month2+'-01 00:00:00':].index)
     log_recover = np.exp(predict_ts)
-    original_ts = ts['2021-02-01 00:00:00':]
+    original_ts = ts[year2+'-'+month2+'-01 00:00:00':]
 
     ts = ts[log_recover.index]
     ts2 = ts2[log_recover.index]
@@ -342,10 +352,10 @@ def main():
     plt.legend(loc='best')
     # plt.title('RMSE: %.4f' % np.sqrt(sum((log_recover-ts)**2)/ts.size))
     # title 3
-    plt.title('RMSE arima: %.4f RMSE ec: %.4f' % (np.sqrt(
-        sum((log_recover-ts)**2)/ts.size), np.sqrt(sum((ts-ts2)**2)/ts.size)))
+    # plt.title('RMSE arima: %.4f RMSE ec: %.4f' % (np.sqrt(
+    #     sum((log_recover-ts)**2)/ts.size), np.sqrt(sum((ts-ts2)**2)/ts.size)))
     plt.xticks(rotation=20)
-    plt.savefig('pic/Figure_wind_2021_valid_jianggongling_month2.png')
+    plt.savefig('pic/Figure_wind_valid_' + outname + '_month'+month2+'.png')
 
     # output csv
     # time2_index = pd.Series(log_recover.index)
@@ -355,7 +365,7 @@ def main():
     realtsPredict = log_recover
     Outhead = [" WindSpeed10m"]
     outpath = './text/'
-    filename = 'arima_out_wind202101_jianggongling_month2.csv'
+    filename = 'arima_out_wind' + year2 + month2+'_' + outname + '_month2.csv'
     filenameout = os.path.join(outpath, filename)
     realtsPredict.to_csv(filenameout, index=False,
                          header=Outhead, encoding='utf-8')
@@ -363,4 +373,13 @@ def main():
 
 if __name__ == '__main__':
     # test()
-    main()
+    # main(outname="huadiankushui", year2='2021', wdays=31, fmonth=7)
+    # main(outname="huadiankushui", year2='2021',wdays=30, fmonth=6)
+    # valid Huadiankushui
+    # main(outname="NewHuadiankushui", year2='2022', wdays=28, fmonth=2)#
+    # main(outname="NewHuadiankushui", year2='2022', wdays=30, fmonth=6)
+    # valid naomaohu
+    main(outname="Naomaohu", year2='2022', wdays=28, fmonth=2)  # ec better?
+    # main(outname="Naomaohu", year2='2022', wdays=30, fmonth=6)
+    # valid santanghu
+    # main(outname="xinjiangsantanghu1qi", year2='2022', wdays=30, fmonth=6)
