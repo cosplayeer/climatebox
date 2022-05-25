@@ -10,8 +10,8 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/contrib/cd_inv_string.ncl"
 ; targetmonth="202002"
 
 yearfrom="2022"
-monthfrom="04"
-targetmonth="202206"
+monthfrom="05"
+targetmonth="202207"
 ;diqingyuan
 ; xo = (/ 109.202914 /)
 ; yo = (/ 37.6528 /)
@@ -20,13 +20,13 @@ datatype="NewHuadiankushui"
 xo = (/ 95.2555 /)
 yo = (/ 42.5754 /)
 ;
-datatype="Naomaohu"
-xo = (/ 94.9144 /)
-yo = (/ 43.6945 /)
-; ;
-datatype="xinjiangsantanghu1qi"
-xo = (/ 93.2372 /)
-yo = (/ 44.1552 /)
+; datatype="Naomaohu"
+; xo = (/ 94.9144 /)
+; yo = (/ 43.6945 /)
+; ; ;
+; datatype="xinjiangsantanghu1qi"
+; xo = (/ 93.2372 /)
+; yo = (/ 44.1552 /)
 
 ; fil = "data/ec"+yearfrom+monthfrom+"_"+targetmonth+"_global.grib"
 fil = "data/Seasonal_2month_daily"+yearfrom+monthfrom+"01"+"future2month.grib"
@@ -68,8 +68,6 @@ write_table(foutf,"w",hlist,"%s")
 ; siymdh=tostring(t)
 siymdh = cd_string(t, "%Y%N%D %H:%M:%S")
 ; print(siymdh)
-; do i = 0, dimfile - 1
 siymdh=tostring(siymdh)
 alist = [/siymdh, wind10, winddir10, t2mpoint, pressurepoint, densitypoint/]
 write_table(foutf,"a",alist, "%s, %9.3f, %9.3f, %9.3f, %9.3f, %9.3f")
-; end do

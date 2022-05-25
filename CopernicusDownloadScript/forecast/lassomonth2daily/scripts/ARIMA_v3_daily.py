@@ -1,4 +1,6 @@
 # -*-coding:utf-8-*-
+import datetime as dt
+import calendar
 import pandas as pd
 import numpy as np
 # from statsmodels.tsa.arima_model import ARMA
@@ -324,12 +326,34 @@ def main(outname, year2, wdays, fmonth):
     # 滚动向外预测,以２０２１七月以前的为训练集，７－１２月为测试集
     # ts_train = ts_log[:'2020'+'-'+month2+'-28 18:00:00']
     ts_train = ts_log[:year2+'-'+month2+'-01 00:00:00'][:-1]
-    ts_test = ts_log[year2+'-'+month2+'-01 00:00:00':]
+    _ts_test = ts_log[year2+'-'+month2+'-01 00:00:00':]
+    # print(_ts_test)
+
+    def get_ts_test(_ts_test):
+        # if test data empty, append 1 month fake data frame to forecast
+        if _ts_test.empty:
+            now = dt.datetime(int(year2), fmonth, 1)
+            days_1_month = calendar.monthrange(int(year2), fmonth)[1]
+            future = now + dt.timedelta(days=days_1_month)
+            dates_plus = pd.date_range(now, future, freq='6H')
+            # print(dates_plus.shape[0])
+            winds_plus = pd.DataFrame(np.random.randn(dates_plus.shape[0], 1),
+                                      index=dates_plus,
+                                      columns=['speed'])
+            # convert series to dataframe
+            _ts_test_frame = _ts_test.to_frame(name='speed')
+            ts_new_test = _ts_test_frame.append(
+                winds_plus,  ignore_index=False)
+            # convert dataframe to series.
+            return ts_new_test.squeeze()
+        return _ts_test
+
+    ts_test = get_ts_test(_ts_test)
     diffed_ts = diff_ts(ts_train, [wdays*4, 1])
     forecast_list = []
 
     for i, dta in enumerate(ts_test):
-        # if i % (30*4) == 0:
+        # if i % (28) == 0:
         model = arima_model(diffed_ts)
         model.certain_model(0, 2)  # dyp
         # model.get_proper_model()
@@ -338,22 +362,26 @@ def main(outname, year2, wdays, fmonth):
         forecast_list.append(forecast_data)
         add_today_data(model, ts_train, dta, [wdays*4, 1], type='month')
 
-    predict_ts = pd.Series(
-        data=forecast_list, index=ts[year2+'-'+month2+'-01 00:00:00':].index)
-    log_recover = np.exp(predict_ts)
-    original_ts = ts[year2+'-'+month2+'-01 00:00:00':]
+    # _predict_ts = pd.Series(
+    #     data=forecast_list, index=ts[year2+'-'+month2+'-01 00:00:00':].index)
+    _predict_ts = pd.Series(
+        data=forecast_list, index=ts_test[year2+'-'+month2+'-01 00:00:00':].index)
+    log_recover = np.exp(_predict_ts)
+    original_ts = ts_test[year2+'-'+month2+'-01 00:00:00':]
 
-    ts = ts[log_recover.index]
+    ts = ts_test[log_recover.index]
     ts2 = ts2[log_recover.index]
     plt.figure(facecolor='white')
     plt.plot(log_recover, color='blue', label='Predict_arima')
-    plt.plot(ts, color='red', label='Original')
     plt.plot(ts2, color='green', label='Pridict_ec')
     plt.legend(loc='best')
-    # plt.title('RMSE: %.4f' % np.sqrt(sum((log_recover-ts)**2)/ts.size))
-    # title 3
-    # plt.title('RMSE arima: %.4f RMSE ec: %.4f' % (np.sqrt(
-    #     sum((log_recover-ts)**2)/ts.size), np.sqrt(sum((ts-ts2)**2)/ts.size)))
+    # 原始数据是测试，而不是预报
+    if not _ts_test.empty:
+        plt.plot(ts, color='red', label='Original')
+        # plt.title('RMSE: %.4f' % np.sqrt(sum((log_recover-ts)**2)/ts.size))
+        # title 3
+        plt.title('RMSE arima: %.4f RMSE ec: %.4f' % (np.sqrt(
+            sum((log_recover-ts)**2)/ts.size), np.sqrt(sum((ts-ts2)**2)/ts.size)))
     plt.xticks(rotation=20)
     plt.savefig('pic/Figure_wind_valid_' + outname + '_month'+month2+'.png')
 
@@ -362,12 +390,13 @@ def main(outname, year2, wdays, fmonth):
     # framelist = [ts]
     # realts = pd.concat(framelist, axis=1)
     # print(realts)
-    realtsPredict = log_recover
-    Outhead = [" WindSpeed10m"]
+    realtsPredict = pd.Series(log_recover, index=log_recover.index)
+    # print(realtsPredict)
+    Outhead = [" Timeinfo, WindSpeed10m"]
     outpath = './text/'
     filename = 'arima_out_wind' + year2 + month2+'_' + outname + '_month2.csv'
     filenameout = os.path.join(outpath, filename)
-    realtsPredict.to_csv(filenameout, index=False,
+    realtsPredict.to_csv(filenameout, index=True,
                          header=Outhead, encoding='utf-8')
 
 
@@ -377,9 +406,9 @@ if __name__ == '__main__':
     # main(outname="huadiankushui", year2='2021',wdays=30, fmonth=6)
     # valid Huadiankushui
     # main(outname="NewHuadiankushui", year2='2022', wdays=28, fmonth=2)#
-    # main(outname="NewHuadiankushui", year2='2022', wdays=30, fmonth=6)
+    main(outname="NewHuadiankushui", year2='2022', wdays=31, fmonth=7)
     # valid naomaohu
-    main(outname="Naomaohu", year2='2022', wdays=28, fmonth=2)  # ec better?
-    # main(outname="Naomaohu", year2='2022', wdays=30, fmonth=6)
+    # main(outname="Naomaohu", year2='2022', wdays=28, fmonth=2)  # ec better?
+    main(outname="Naomaohu", year2='2022', wdays=31, fmonth=7)
     # valid santanghu
-    # main(outname="xinjiangsantanghu1qi", year2='2022', wdays=30, fmonth=6)
+    main(outname="xinjiangsantanghu1qi", year2='2022', wdays=31, fmonth=7)
