@@ -181,9 +181,9 @@ if __name__ == '__main__':
     #           "ecmwf_aletai_202102.csv"]
     # flists = ["ecmwf_diqingyuan_202102.csv"]
     # flists = ["ecmwf_jianggongling_202102_85m.csv"]
-    # flists = ["ecmwf_xinjiangsantanghu1qi_202202_result.csv"]
-    # flists = ["ecmwf_Naomaohu_202202_result.csv"]
-    flists = ["ecmwf_NewHuadiankushui_202202_result.csv"]
+    # flists = ["ecmwf_xinjiangsantanghu1qi_202202.csv"]
+    # flists = ["ecmwf_Naomaohu_202202.csv"]
+    flists = ["ecmwf_Naomaohu_202202.csv"]
     for fname in flists:
         # fname = "ecmwf_aletai_201802.csv"
         # print(fname)

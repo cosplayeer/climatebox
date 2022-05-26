@@ -178,6 +178,7 @@ def main(outname, year2, wdays, fmonth):
     month2 = '%02d' % (fmonth)
     fname = "obs" + outname + "UTC0-6hourly.txt"
     ts = getdf(fname=fname, fmonth=fmonth)
+    print(ts)
     ecname = "ecmwf_" + outname + "_" + year2 + month2 + ".csv"
     print(ecname)
     ts2 = getdf10m(fname=ecname)
@@ -321,7 +322,8 @@ def main(outname, year2, wdays, fmonth):
         if model == None:
             raise ValueError('No model fit before')
         fc = model.forecast_next_day_value(type)
-        return predict_diff_recover(fc, [12, 1])
+        # return predict_diff_recover(fc, [12, 1])
+        return predict_diff_recover(fc, [wdays*4, 1])  # dyp
 
     # 滚动向外预测,以２０２１七月以前的为训练集，７－１２月为测试集
     # ts_train = ts_log[:'2020'+'-'+month2+'-28 18:00:00']
@@ -369,19 +371,38 @@ def main(outname, year2, wdays, fmonth):
     log_recover = np.exp(_predict_ts)
     original_ts = ts_test[year2+'-'+month2+'-01 00:00:00':]
 
-    ts = ts_test[log_recover.index]
+    # ts = ts_test[log_recover.index]
+    ts = np.exp(ts_test)
     ts2 = ts2[log_recover.index]
     plt.figure(facecolor='white')
     plt.plot(log_recover, color='blue', label='Predict_arima')
     plt.plot(ts2, color='green', label='Pridict_ec')
+
+    def test_rmse(ts_obs=ts, ts_ari=log_recover, ndays=1):
+        print('RMSE arima: %.4f' % np.sqrt(
+            sum((ts_ari-ts_obs)**2)/ts.size))
+        ndays = range(-20, 20, 1)
+        for i in ndays:
+            ts_ari = log_recover.shift(periods=i).dropna()
+            ts_obs = ts.reindex(ts_ari.index)
+            # print(ts_ari)
+            print('RMSE arima %1d: %.4f' % (i, np.sqrt(
+                sum((ts_ari-ts_obs)**2)/ts_ari.size)))
+    test_rmse()
+    # 有原始数据可以测试，而不是预报未来没有观测数据
+    # if not _ts_test.empty:
+    #     # plt.title('RMSE: %.4f' % np.sqrt(sum((log_recover-ts)**2)/ts.size))
+    #     # title 3
+    #     plt.title('RMSE arima: %.4f RMSE ec: %.4f' % (np.sqrt(
+    #         sum((log_recover-ts)**2)/ts.size), np.sqrt(sum((ts-ts2)**2)/ts.size)))
+    #     plt.plot(ts, color='red', label='Original')
+    # else:
+    #     # no true obs, no use RMSE
+    #     # plt.title('RMSE arima: %.4f' % np.sqrt(
+    #     #     sum((log_recover-ts)**2)/ts.size))
+    #     pass
+
     plt.legend(loc='best')
-    # 原始数据是测试，而不是预报
-    if not _ts_test.empty:
-        plt.plot(ts, color='red', label='Original')
-        # plt.title('RMSE: %.4f' % np.sqrt(sum((log_recover-ts)**2)/ts.size))
-        # title 3
-        plt.title('RMSE arima: %.4f RMSE ec: %.4f' % (np.sqrt(
-            sum((log_recover-ts)**2)/ts.size), np.sqrt(sum((ts-ts2)**2)/ts.size)))
     plt.xticks(rotation=20)
     plt.savefig('pic/Figure_wind_valid_' + outname + '_month'+month2+'.png')
 
@@ -405,10 +426,15 @@ if __name__ == '__main__':
     # main(outname="huadiankushui", year2='2021', wdays=31, fmonth=7)
     # main(outname="huadiankushui", year2='2021',wdays=30, fmonth=6)
     # valid Huadiankushui
-    # main(outname="NewHuadiankushui", year2='2022', wdays=28, fmonth=2)#
-    main(outname="NewHuadiankushui", year2='2022', wdays=31, fmonth=7)
+    # main(outname="NewHuadiankushui", year2='2022', wdays=28, fmonth=2)
+    # main(outname="NewHuadiankushui", year2='2022', wdays=31, fmonth=3)
+    # main(outname="NewHuadiankushui", year2='2022', wdays=31, fmonth=1)
+    # main(outname="NewHuadiankushui", year2='2022', wdays=31, fmonth=7)
     # valid naomaohu
-    # main(outname="Naomaohu", year2='2022', wdays=28, fmonth=2)  # ec better?
-    main(outname="Naomaohu", year2='2022', wdays=31, fmonth=7)
+    main(outname="Naomaohu", year2='2022', wdays=28, fmonth=2)  # ec better?
+    # main(outname="Naomaohu", year2='2022', wdays=31, fmonth=3)
+    # main(outname="Naomaohu", year2='2022', wdays=31, fmonth=1)
     # valid santanghu
-    main(outname="xinjiangsantanghu1qi", year2='2022', wdays=31, fmonth=7)
+    # main(outname="xinjiangsantanghu1qi", year2='2022', wdays=28, fmonth=2)
+    # main(outname="xinjiangsantanghu1qi", year2='2022', wdays=31, fmonth=3)
+    # main(outname="xinjiangsantanghu1qi", year2='2022', wdays=31, fmonth=1)
