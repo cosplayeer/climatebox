@@ -1,6 +1,7 @@
 # -*-coding:utf-8-*-
 import datetime as dt
 import calendar
+from xml.sax.saxutils import prepare_input_source
 import pandas as pd
 import numpy as np
 # from statsmodels.tsa.arima_model import ARMA
@@ -63,7 +64,7 @@ def getdf10m(fname):
     # df['speed'] = df['speed'].interpolate(method='spline', order=3)
     # df['speed'] = df['speed'].interpolate(method='time')
     _ts = df['speed']
-    print(_ts.max())
+    # print(_ts.max())
     return _ts
 
 
@@ -178,7 +179,7 @@ def main(outname, year2, wdays, fmonth):
     month2 = '%02d' % (fmonth)
     fname = "obs" + outname + "UTC0-6hourly.txt"
     ts = getdf(fname=fname, fmonth=fmonth)
-    print(ts)
+    # print(ts)
     ecname = "ecmwf_" + outname + "_" + year2 + month2 + ".csv"
     print(ecname)
     ts2 = getdf10m(fname=ecname)
@@ -374,33 +375,71 @@ def main(outname, year2, wdays, fmonth):
     # ts = ts_test[log_recover.index]
     ts = np.exp(ts_test)
     ts2 = ts2[log_recover.index]
-    plt.figure(facecolor='white')
-    plt.plot(log_recover, color='blue', label='Predict_arima')
-    plt.plot(ts2, color='green', label='Pridict_ec')
+    # plt.figure(facecolor='white')
+    # plt.plot(log_recover, color='blue', label='Predict_arima')
+    # plt.plot(ts2, color='green', label='Pridict_ec')
 
-    def test_rmse(ts_obs=ts, ts_ari=log_recover, ndays=1):
-        print('RMSE arima: %.4f' % np.sqrt(
-            sum((ts_ari-ts_obs)**2)/ts.size))
-        ndays = range(-20, 20, 1)
+    # def test_rmse(ts_obs=ts, ts_ari=log_recover, ndays=1):
+    #     print('RMSE arima: %.4f' % np.sqrt(
+    #         sum((ts_ari-ts_obs)**2)/ts.size))
+    #     ndays = range(-20, 20, 1)
+    #     for i in ndays:
+    #         ts_ari = log_recover.shift(periods=i).dropna()
+    #         ts_obs = ts.reindex(ts_ari.index)
+    #         # print(ts_ari)
+    #         print('RMSE arima %1d: %.4f' % (i, np.sqrt(
+    #             sum((ts_ari-ts_obs)**2)/ts_ari.size)))
+    # test_rmse()
+
+    # def get_min_key_train_rmse(ts_obs=ts, ts_ari=log_recover_train):
+    #     _rmse_list = dict()
+    #     ndays = range(-20, 20, 1)
+    #     for i in ndays:
+    #         ts_ari = log_recover_train.shift(periods=i).dropna()
+    #         ts_obs = ts.reindex(ts_ari.index)
+    #         v = np.sqrt(sum((ts_ari-ts_obs)**2)/ts_ari.size)
+    #         _rmse_list[i] = float(v)
+    #     key_min = min(_rmse_list.keys(), key=(lambda k: _rmse_list[k]))
+    #     return key_min
+    # min_key = get_min_key_train_rmse()
+    # print('min key in train is: %s' % min_key)
+
+    def get_min_key_rmse(ts_obs=ts, ts_ari=log_recover):
+        _rmse_list = dict()
+        ndays = range(-5, 5, 1)
         for i in ndays:
             ts_ari = log_recover.shift(periods=i).dropna()
             ts_obs = ts.reindex(ts_ari.index)
-            # print(ts_ari)
-            print('RMSE arima %1d: %.4f' % (i, np.sqrt(
-                sum((ts_ari-ts_obs)**2)/ts_ari.size)))
-    test_rmse()
+            v = np.sqrt(sum((ts_ari-ts_obs)**2)/ts_ari.size)
+            _rmse_list[i] = float(v)
+        key_min = min(_rmse_list.keys(), key=(lambda k: _rmse_list[k]))
+        return key_min
+    min_key = get_min_key_rmse()
+    print('min key in test is: %s' % min_key)
+
+    shiftstep = -1
+    # shiftstep = -1
+    ts_ari_result = log_recover.shift(periods=shiftstep).dropna()
+    ts_obs_result = ts.reindex(ts_ari_result.index)
+    ts_ec_result = ts2[ts_ari_result.index]
+    plt.figure(facecolor='white')
+    plt.plot(ts_ari_result, color='blue', label='Predict_arima')
+    plt.plot(ts_ec_result, color='green', label='Pridict_ec')
     # 有原始数据可以测试，而不是预报未来没有观测数据
-    # if not _ts_test.empty:
-    #     # plt.title('RMSE: %.4f' % np.sqrt(sum((log_recover-ts)**2)/ts.size))
-    #     # title 3
-    #     plt.title('RMSE arima: %.4f RMSE ec: %.4f' % (np.sqrt(
-    #         sum((log_recover-ts)**2)/ts.size), np.sqrt(sum((ts-ts2)**2)/ts.size)))
-    #     plt.plot(ts, color='red', label='Original')
-    # else:
-    #     # no true obs, no use RMSE
-    #     # plt.title('RMSE arima: %.4f' % np.sqrt(
-    #     #     sum((log_recover-ts)**2)/ts.size))
-    #     pass
+    if not _ts_test.empty:
+        # title 3
+        # plt.title('RMSE arima: %.4f RMSE ec: %.4f' % (np.sqrt(
+        #     sum((log_recover-ts)**2)/ts.size), np.sqrt(sum((ts-ts2)**2)/ts.size)))
+        # plt.plot(ts, color='red', label='Original')
+        # plt shift
+        plt.title('RMSE arima: %.4f RMSE ec: %.4f' % (np.sqrt(
+            sum((ts_ari_result-ts_obs_result)**2)/ts_obs_result.size), np.sqrt(sum((ts_ec_result-ts_obs_result)**2)/ts_obs_result.size)))
+        plt.plot(ts_obs_result, color='red', label='Original')
+    else:
+        # no true obs, no use RMSE
+        # plt.title('RMSE arima: %.4f' % np.sqrt(
+        #     sum((log_recover-ts)**2)/ts.size))
+        pass
 
     plt.legend(loc='best')
     plt.xticks(rotation=20)
@@ -411,7 +450,7 @@ def main(outname, year2, wdays, fmonth):
     # framelist = [ts]
     # realts = pd.concat(framelist, axis=1)
     # print(realts)
-    realtsPredict = pd.Series(log_recover, index=log_recover.index)
+    realtsPredict = pd.Series(ts_ari_result, index=ts_ari_result.index)
     # print(realtsPredict)
     Outhead = [" Timeinfo, WindSpeed10m"]
     outpath = './text/'
@@ -426,12 +465,12 @@ if __name__ == '__main__':
     # main(outname="huadiankushui", year2='2021', wdays=31, fmonth=7)
     # main(outname="huadiankushui", year2='2021',wdays=30, fmonth=6)
     # valid Huadiankushui
-    # main(outname="NewHuadiankushui", year2='2022', wdays=28, fmonth=2)
+    main(outname="NewHuadiankushui", year2='2022', wdays=28, fmonth=2)
     # main(outname="NewHuadiankushui", year2='2022', wdays=31, fmonth=3)
     # main(outname="NewHuadiankushui", year2='2022', wdays=31, fmonth=1)
     # main(outname="NewHuadiankushui", year2='2022', wdays=31, fmonth=7)
     # valid naomaohu
-    main(outname="Naomaohu", year2='2022', wdays=28, fmonth=2)  # ec better?
+    # main(outname="Naomaohu", year2='2022', wdays=28, fmonth=2)  # ec better?
     # main(outname="Naomaohu", year2='2022', wdays=31, fmonth=3)
     # main(outname="Naomaohu", year2='2022', wdays=31, fmonth=1)
     # valid santanghu

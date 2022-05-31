@@ -183,7 +183,8 @@ if __name__ == '__main__':
     # flists = ["ecmwf_jianggongling_202102_85m.csv"]
     # flists = ["ecmwf_xinjiangsantanghu1qi_202202.csv"]
     # flists = ["ecmwf_Naomaohu_202202.csv"]
-    flists = ["ecmwf_Naomaohu_202202.csv"]
+    # flists = ["ecmwf_xinjiangsantanghu1qi_202202_shift.csv"]
+    flists = ["ecmwf_NewHuadiankushui_202202_result_shift.csv"]
     for fname in flists:
         # fname = "ecmwf_aletai_201802.csv"
         # print(fname)

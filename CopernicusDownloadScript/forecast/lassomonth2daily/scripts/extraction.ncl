@@ -9,24 +9,24 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/contrib/cd_inv_string.ncl"
 ; yearfrom="2019"
 ; targetmonth="202002"
 
-yearfrom="2021"
-monthfrom="12"
-targetmonth="202202"
+yearfrom="2022"
+monthfrom="01"
+targetmonth="202203"
 ;diqingyuan
 ; xo = (/ 109.202914 /)
 ; yo = (/ 37.6528 /)
 
-datatype="NewHuadiankushui"
-xo = (/ 95.2555 /)
-yo = (/ 42.5754 /)
+; datatype="NewHuadiankushui"
+; xo = (/ 95.2555 /)
+; yo = (/ 42.5754 /)
 ;
-datatype="Naomaohu"
-xo = (/ 94.9144 /)
-yo = (/ 43.6945 /)
+; datatype="Naomaohu"
+; xo = (/ 94.9144 /)
+; yo = (/ 43.6945 /)
 ; ; ;
-; datatype="xinjiangsantanghu1qi"
-; xo = (/ 93.2372 /)
-; yo = (/ 44.1552 /)
+datatype="xinjiangsantanghu1qi"
+xo = (/ 93.2372 /)
+yo = (/ 44.1552 /)
 
 ; fil = "data/ec"+yearfrom+monthfrom+"_"+targetmonth+"_global.grib"
 fil = "data/Seasonal_2month_daily"+yearfrom+monthfrom+"01"+"future2month.grib"
