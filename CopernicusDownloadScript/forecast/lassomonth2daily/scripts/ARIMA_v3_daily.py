@@ -11,6 +11,7 @@ import os
 from dateutil.relativedelta import relativedelta
 from copy import deepcopy
 import matplotlib.pyplot as plt
+from configparser import ConfigParser
 
 # observation
 
@@ -175,7 +176,10 @@ def test():
     # pass
 
 
-def main(outname, year2, wdays, fmonth):
+def main():
+    # outname, year2, wdays, fmonth
+    from configs import getconfig
+    outname, year2, wdays, fmonth = getconfig()
     month2 = '%02d' % (fmonth)
     fname = "obs" + outname + "UTC0-6hourly.txt"
     ts = getdf(fname=fname, fmonth=fmonth)
@@ -454,7 +458,7 @@ def main(outname, year2, wdays, fmonth):
     # print(realtsPredict)
     Outhead = [" Timeinfo, WindSpeed10m"]
     outpath = './text/'
-    filename = 'arima_out_wind' + year2 + month2+'_' + outname + '_month2.csv'
+    filename = 'arima_out_wind' + year2 + month2+'_' + outname + '.csv'
     filenameout = os.path.join(outpath, filename)
     realtsPredict.to_csv(filenameout, index=True,
                          header=Outhead, encoding='utf-8')
@@ -465,7 +469,8 @@ if __name__ == '__main__':
     # main(outname="huadiankushui", year2='2021', wdays=31, fmonth=7)
     # main(outname="huadiankushui", year2='2021',wdays=30, fmonth=6)
     # valid Huadiankushui
-    main(outname="NewHuadiankushui", year2='2022', wdays=28, fmonth=2)
+    # main(outname="NewHuadiankushui", year2='2022', wdays=28, fmonth=2)
+    main()
     # main(outname="NewHuadiankushui", year2='2022', wdays=31, fmonth=3)
     # main(outname="NewHuadiankushui", year2='2022', wdays=31, fmonth=1)
     # main(outname="NewHuadiankushui", year2='2022', wdays=31, fmonth=7)

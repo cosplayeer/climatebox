@@ -1,6 +1,7 @@
 # coding=utf-8
 import os
 import pandas as pd
+from configparser import ConfigParser
 
 
 def getdf(fname, fmonth):
@@ -61,9 +62,14 @@ def replace(station, timemonth):
     return _result
 
 
-def outputcsv(station, timemonth):
-    outname = station
-    ec_after = replace(station, timemonth)
+def outputcsv():
+    # outname = station
+    # ec_after = replace(station, timemonth)
+    from configs import getconfig
+    from pchip import pchipfile
+    outname, year2, wdays, fmonth = getconfig()
+    timemonth = str(year2) + '%02d' % (fmonth)
+    ec_after = replace(outname, timemonth)
     Outhead = [
         'WindSpeedXm', 'WindDirection10m', 'Temperature2m', 'Pressure10m', 'Airdensity']
     outpath = './text/'
@@ -72,6 +78,7 @@ def outputcsv(station, timemonth):
     filenameout = os.path.join(outpath, filename)
     ec_after.to_csv(filenameout, index=True,
                     header=Outhead, encoding='utf-8')
+    pchipfile(filename)
 
 
 def test():
@@ -92,5 +99,6 @@ def test():
 
 if __name__ == '__main__':
     # test()
-    outputcsv(station="Naomaohu", timemonth=202207)
+    # outputcsv(station="Naomaohu", timemonth=202207)
+    outputcsv()
     # print(ec_after)

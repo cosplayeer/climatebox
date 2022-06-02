@@ -173,6 +173,16 @@ def interpolate(filename, inpath, outpath, intervals):
                        header=Outhead, encoding='utf-8')
 
 
+def pchipfile(fname='a'):
+    ipath = "./text/"
+    outpath = "./text1hour/"
+    if os.path.exists(os.path.join(ipath, fname)):
+        interpolate(filename=fname, inpath=ipath,
+                    outpath=outpath, intervals='60min')
+    else:
+        print("original file not exists")
+
+
 if __name__ == '__main__':
     # 使用ａｒｉｍａ＿ｏｕｔ．ｃｓｖ中的模型风速替换预报风速
     # flists = ["ecmwf_aletai_201802.csv",
@@ -184,11 +194,13 @@ if __name__ == '__main__':
     # flists = ["ecmwf_xinjiangsantanghu1qi_202202.csv"]
     # flists = ["ecmwf_Naomaohu_202202.csv"]
     # flists = ["ecmwf_xinjiangsantanghu1qi_202202_shift.csv"]
-    flists = ["ecmwf_NewHuadiankushui_202202_result_shift.csv"]
-    for fname in flists:
-        # fname = "ecmwf_aletai_201802.csv"
-        # print(fname)
-        ipath = "./text/"
-        outpath = "./text1hour/"
-        interpolate(filename=fname, inpath=ipath,
-                    outpath=outpath, intervals='60min')
+
+    # flists = ["ecmwf_NewHuadiankushui_202202_result_shift.csv"]
+    # for fname in flists:
+    #     # fname = "ecmwf_aletai_201802.csv"
+    #     # print(fname)
+    #     ipath = "./text/"
+    #     outpath = "./text1hour/"
+    #     interpolate(filename=fname, inpath=ipath,
+    #                 outpath=outpath, intervals='60min')
+    pchipfile("ecmwf_NewHuadiankushui_202202_result_shift.csv")
