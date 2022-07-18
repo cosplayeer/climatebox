@@ -54,8 +54,18 @@ def readInData(obsname="obsNaomaohu202208.txt", prediction_size=480, freq='6H'):
 def output_png(m, forecast, pngname):
     p1name = os.path.join('pic', 'forecast' + pngname + '.png')
     p2name = os.path.join('pic', 'forecast_components' + pngname + '.png')
-    m.plot(forecast).savefig(p1name)
-    m.plot_components(forecast).savefig(p2name)
+    # print(dir(pic1))
+    x1 = forecast['ds']
+    y1 = forecast['yhat']
+    y2 = forecast['yhat_lower']
+    y3 = forecast['yhat_upper']
+    plt.plot(x1, y1)
+    # plt.plot(x1, y2)
+    # plt.plot(x1, y3)
+    plt.xlabel('time')
+    plt.savefig(p1name)
+    # m.plot(forecast).savefig(p1name)
+    # m.plot_components(forecast).savefig(p2name)
 
 
 '''
@@ -105,13 +115,17 @@ def calculate_forecast_errors(df, prediction_size):
     df = df.copy()
     df['e'] = df['y'] - df['yhat']
     df['p'] = 100 * df['e'] / df['y']
+    df['e2'] = df['e'] * df['e']
 
     predicted_part = df[-prediction_size:]
 
     def error_mean(error_name): return np.mean(
         np.abs(predicted_part[error_name]))
 
-    return {'MAPE': error_mean('p'), 'MAE': error_mean('e')}
+    def error_mean_rmse(error_name): return np.sqrt(np.mean(
+        predicted_part[error_name]))
+
+    return {'MAPE': error_mean('p'), 'MAE': error_mean('e'), 'RMSE': error_mean_rmse('e2')}
 
 
 '''
@@ -130,13 +144,13 @@ def PrintTheMAPEandMAE(df, forecast, prediction_size):
         print(err_name, err_value)
 
 
-def test():
+def test6hourly():
     testdataname = "obsNaomaohuUTC0-6hourly.txt"
     df, forecast, m = readInData(
-        obsname=testdataname, prediction_size=480, freq='6H')
+        obsname=testdataname, prediction_size=4*30*1, freq='6H')  # forecast 4 months
     output_png(m=m, forecast=forecast, pngname=testdataname)
     output_csv(forecast=forecast, outname=testdataname)
-    PrintTheMAPEandMAE(df=df, forecast=forecast, prediction_size=480)
+    PrintTheMAPEandMAE(df=df, forecast=forecast, prediction_size=4*30*1)
 
 
 def main():
@@ -152,5 +166,5 @@ def main():
 
 
 if __name__ == '__main__':
-    # test()
-    main()
+    test6hourly()
+    # main()
