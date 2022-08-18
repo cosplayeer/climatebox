@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
+import json
 from sklearn import linear_model
 
 '''
@@ -113,21 +114,32 @@ def printBestMember(station: str, targetmonth: str):
     # ----等比例系数
     alpha_2 = np.mean(df_test.iloc[:, -1]) / np.mean(df_test.iloc[:, max_id])
     # print(alpha_2)
-    return {str(targetmonth): {'max_id': max_id, 'max_cor': cor_obs.max(), 'alpha': alpha_2}}
+    return {str(targetmonth): {"max_id": max_id, "max_cor": cor_obs.max(), "alpha": alpha_2}}
     # _result = df_test.iloc[:, -2] * alpha_2
     # print(_result)
 
 
-if __name__ == '__main__':
+def processJsonOfStation(station):
     from extractionECMWF import month_add2
-    fromdate = 20210101
+    fromdate = 20200101  # tomorrow: 20200101
     todate = 20211201
-    station = "NewHuadiankushui"
+    # station = "NewHuadiankushui"
+    # station = "xinjiangsantanghu1qi"
+    # station = "Naomaohu"
     # printBestMember(station="NewHuadiankushui", targetmonth="20210901")
     i = fromdate
     result = dict()
     while i <= todate:
-        temp = printBestMember(station="NewHuadiankushui", targetmonth=str(i))
+        temp = printBestMember(station=station, targetmonth=str(i))
         result.update(temp)
         i = int(month_add2(str(i), months=1))
-    print(result)
+    # print(result)
+    result_json = json.dumps(result)
+    with open('text/alpha'+str(station)+'.txt', 'w') as f:
+        f.write(str(result_json))
+
+
+if __name__ == '__main__':
+    stationList = ["NewHuadiankushui", "xinjiangsantanghu1qi", "Naomaohu"]
+    for s in stationList:
+        processJsonOfStation(s)

@@ -1,5 +1,5 @@
-fromyear="2021"
-fromonth="1２"
+fromyear="2022"
+fromonth="06"
 tomonth="6monthly"
 
 ;A avg

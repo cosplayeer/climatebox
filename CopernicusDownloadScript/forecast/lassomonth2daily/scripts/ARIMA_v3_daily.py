@@ -1,4 +1,4 @@
-# -*-coding:utf-8-*-
+# coding=utf-8
 import datetime as dt
 import calendar
 from xml.sax.saxutils import prepare_input_source
@@ -12,6 +12,7 @@ from dateutil.relativedelta import relativedelta
 from copy import deepcopy
 import matplotlib.pyplot as plt
 from configparser import ConfigParser
+from update_arima_out import updateECcsv
 
 # observation
 
@@ -38,10 +39,21 @@ def getdf(fname, fmonth):
 
     df.index = pd.to_datetime(df.index)
     df['speed'] = df['speed'].interpolate(method='linear')
+
     # df['speed'] = df['speed'].interpolate(method='spline', order=3)
     # df['speed'] = df['speed'].interpolate(method='time')
+
     _ts = df['speed']
+    # print(_ts)
     return _ts
+
+
+def loadFixed(fixedFile=''):
+    print('load fixed file')
+    fixedPath = os.path.join('./text', fixedFile)
+    with open(fixedPath) as f:
+        _s = eval(f.read())
+        return _s.get('alpha'), _s.get('beta')
 
 # ecmwf forecast 10m wind.
 
@@ -159,6 +171,8 @@ class arima_model:
             new_index = ts.index[-1] + relativedelta(days=1)
         elif type == 'month':
             new_index = ts.index[-1] + relativedelta(months=1)
+        elif type == '6hours':
+            new_index = ts.index[-1] + relativedelta(hours=6)
         ts[new_index] = dat
 
     def add_today_data(self, dat, type='day'):
@@ -171,26 +185,30 @@ class arima_model:
 
 
 def test():
-    ts = getdf(fname="obsHuadiankushuiUTC0-6hourly.txt", fmonth=2)
-    print(ts)
-    # pass
+    # ts = getdf(fname="obsHuadiankushuiUTC0-6hourly.txt", fmonth=2)
+    # print(ts)
+    a, b = loadFixed(fixedFile='fixparameters202203_xinjiangsantanghu1qi.txt')
+    print(a, b)
 
 
-def main():
+def main(outputCsv=False, updateEc=False, loadAlpha=False, fixedFile='', obsAfter2020=False):
     # outname, year2, wdays, fmonth
     from configs import getconfig
     outname, year2, wdays, fmonth = getconfig()
     month2 = '%02d' % (fmonth)
     fname = "obs" + outname + "UTC0-6hourly.txt"
-    ts = getdf(fname=fname, fmonth=fmonth)
+    _ts = getdf(fname=fname, fmonth=fmonth)
+    if obsAfter2020:
+        ts = _ts['2020-01-01 00:00:00':]
+        # better for NewHuadiankushui 07
+        # 但对于ｐｒｏｐｈｅｔ而言，应该采用尽可能多的历史观测数据
+    else:
+        ts = _ts
     # print(ts)
     ecname = "ecmwf_" + outname + "_" + year2 + month2 + ".csv"
     print(ecname)
     ts2 = getdf10m(fname=ecname)
-    # print("ts2 in 182:")
     # print(ts2)
-    # outname = "huadiankushui"
-    # year2 = '2021'
     # 数据预处理
     ts_log = np.log(ts)
     # rol_mean = ts_log.rolling(window=28*4).mean()
@@ -200,15 +218,15 @@ def main():
     # ts_diff_2 = ts_diff_1.diff(1)
     # ts_diff_2.dropna(inplace=True)
 
-    # # 模型拟合
+    # # # 模型拟合
     # model = arima_model(ts_diff_2)
-    # # #  这里使用模型参数自动识别
+    # # # #  这里使用模型参数自动识别
     # model.get_proper_model()
     # print('bic:%s, p:%s, q:%s' % (model.bic, model.p, model.q))
     # print(model.properModel.forecast()[0])
-    # # print(model.forecast_next_day_value(type='month'))
+    # print(model.forecast_next_day_value(type='day'))
 
-    # # # 预测结果还原
+    # # # # 预测结果还原
     # predict_ts = model.properModel.predict()
     # diff_shift_ts = ts_diff_1.shift(1)
     # diff_recover_1 = predict_ts.add(diff_shift_ts)
@@ -219,14 +237,16 @@ def main():
     # log_recover = np.exp(rol_recover)
     # log_recover.dropna(inplace=True)
 
-    # # 预测结果作图
+    # # # 预测结果作图
     # ts = ts[log_recover.index]
     # plt.figure(facecolor='white')
     # log_recover.plot(color='blue', label='Predict')
     # ts.plot(color='red', label='Original')
     # plt.legend(loc='best')
     # plt.title('RMSE: %.4f' % np.sqrt(sum((log_recover-ts)**2)/ts.size))
-    # plt.show()
+    # # plt.show()
+    # plt.xticks(rotation=20)
+    # plt.savefig('pic/Figure_wind_demo.png')
 
  # 6.完善ＡＲＩＭＡ模型
     # 差分操作 version 2
@@ -315,6 +335,8 @@ def main():
             new_index = ts.index[-1] + relativedelta(days=1)
         elif type == 'month':
             new_index = ts.index[-1] + relativedelta(months=1)
+        elif type == '6hours':
+            new_index = ts.index[-1] + relativedelta(hours=6)
         ts[new_index] = dat
 
     def add_today_data(model, ts,  data, d, type='day'):
@@ -359,15 +381,26 @@ def main():
     diffed_ts = diff_ts(ts_train, [wdays*4, 1])
     forecast_list = []
 
+    model = arima_model(diffed_ts)
+    model.certain_model(0, 2)  # dyp
     for i, dta in enumerate(ts_test):
         # if i % (28) == 0:
-        model = arima_model(diffed_ts)
-        model.certain_model(0, 2)  # dyp
         # model.get_proper_model()
 
-        forecast_data = forecast_next_day_data(model, type='month')
+        forecast_data = forecast_next_day_data(model, type='6hours')
         forecast_list.append(forecast_data)
-        add_today_data(model, ts_train, dta, [wdays*4, 1], type='month')
+        # before
+        # add_today_data(model, ts_train, dta,
+        #                [wdays*4, 1], type='6hours')
+        # after
+        add_today_data(model, ts_train, forecast_data,
+                       [wdays*4, 1], type='6hours')
+
+    '''
+    model = arima_model(diffed_ts)
+    model.certain_model(0, 2)  # dyp
+    print(model.predict)
+    '''
 
     # _predict_ts = pd.Series(
     #     data=forecast_list, index=ts[year2+'-'+month2+'-01 00:00:00':].index)
@@ -419,27 +452,46 @@ def main():
         key_min = min(_rmse_list.keys(), key=(lambda k: _rmse_list[k]))
         return key_min
     min_key = get_min_key_rmse()
-    print('min key in test is: %s' % min_key)
+    # print('min key in test is: %s' % min_key)
 
-    shiftstep = -1
+    shiftstep = 0
+    # shiftstep = min_key
     # shiftstep = -1
     ts_ari_result = log_recover.shift(periods=shiftstep).dropna()
     ts_obs_result = ts.reindex(ts_ari_result.index)
+    # print(ts_obs_result.mean())
     ts_ec_result = ts2[ts_ari_result.index]
+    if loadAlpha:
+        print("loading alpha")
+        alpha, beta = loadFixed(fixedFile)
+    else:
+        alpha = float(ts_obs_result.mean()) / float(ts_ari_result.mean())
+        beta = float(ts_obs_result.mean()) / float(ts_ec_result.mean())
+    ts_ari_result_multi = ts_ari_result * alpha
+    ts_ec_result_multi = ts_ec_result * beta
+
     plt.figure(facecolor='white')
     plt.plot(ts_ari_result, color='blue', label='Predict_arima')
-    plt.plot(ts_ec_result, color='green', label='Pridict_ec')
+    # plt.plot(ts_ari_result, color='blue', label='Predict_arima')
+    plt.plot(ts_ec_result_multi, color='green', label='Pridict_ec_multi')
+    plt.plot(ts_ari_result_multi, color='red', label='Pridict_arima_multi')
+    # plt.plot(ts_ec_result, color='red', label='Pridict_ec_nofix')
+
     # 有原始数据可以测试，而不是预报未来没有观测数据
     if not _ts_test.empty:
-        # title 3
-        # plt.title('RMSE arima: %.4f RMSE ec: %.4f' % (np.sqrt(
-        #     sum((log_recover-ts)**2)/ts.size), np.sqrt(sum((ts-ts2)**2)/ts.size)))
-        # plt.plot(ts, color='red', label='Original')
-        # plt shift
-        plt.title('RMSE arima: %.4f RMSE ec: %.4f' % (np.sqrt(
-            sum((ts_ari_result-ts_obs_result)**2)/ts_obs_result.size), np.sqrt(sum((ts_ec_result-ts_obs_result)**2)/ts_obs_result.size)))
-        plt.plot(ts_obs_result, color='red', label='Original')
+        # title ec
+        # plt.title('RMSE ec multi: %.4f RMSE ec: %.4f' % (np.sqrt(
+        #     sum((ts_ec_result_multi-ts_obs_result)**2)/ts_obs_result.size), np.sqrt(sum((ts_ec_result-ts_obs_result)**2)/ts_obs_result.size)))
+        # title arima
+        plt.title('RMSE arima: %.4f RMSE ec multi: %.4f RMSE arima multi: %.4f ' % (
+            np.sqrt(sum((ts_ari_result-ts_obs_result)**2)/ts_obs_result.size),
+            np.sqrt(sum((ts_ec_result_multi-ts_obs_result)**2) /
+                    ts_obs_result.size),
+            np.sqrt(sum((ts_ari_result_multi-ts_obs_result)**2)/ts_obs_result.size)))
+        # np.sqrt(sum((ts_ec_result-ts_obs_result)**2)/ts_obs_result.size)))
+        plt.plot(ts_obs_result, color='black', label='Original')
     else:
+        print("no true obs, don't use RMSE")
         # no true obs, no use RMSE
         # plt.title('RMSE arima: %.4f' % np.sqrt(
         #     sum((log_recover-ts)**2)/ts.size))
@@ -447,21 +499,44 @@ def main():
 
     plt.legend(loc='best')
     plt.xticks(rotation=20)
-    plt.savefig('pic/Figure_wind_valid_' + outname + '_month'+month2+'.png')
+    plt.savefig('pic/Figure_wind_valid_' + outname +
+                '_month'+month2+'after_model0.png')
 
     # output csv
-    # time2_index = pd.Series(log_recover.index)
-    # framelist = [ts]
-    # realts = pd.concat(framelist, axis=1)
-    # print(realts)
-    realtsPredict = pd.Series(ts_ari_result, index=ts_ari_result.index)
-    # print(realtsPredict)
-    Outhead = [" Timeinfo, WindSpeed10m"]
     outpath = './text/'
-    filename = 'arima_out_wind' + year2 + month2+'_' + outname + '.csv'
-    filenameout = os.path.join(outpath, filename)
-    realtsPredict.to_csv(filenameout, index=True,
-                         header=Outhead, encoding='utf-8')
+    # save alpha & beta to txt
+    if not loadAlpha:
+        print("saving alpha...")
+        fixfile = os.path.join(outpath, "fixparameters" +
+                               year2 + month2+'_' + outname+"2.txt")
+        text1 = str({'alpha': alpha, 'beta': beta})
+        with open(fixfile, 'w') as f:
+            f.write(text1)
+    if outputCsv:
+        #　输出arima的结果　or　ＥＣ修正后的结果，　ＥＣ修正后的结果更好
+        #  训练模型读入的观测数据是按月份拼接的吗，如果要结合prophet，需连续的观测
+        # arima result
+        # realtsPredict = pd.Series(ts_ari_result, index=ts_ari_result.index)
+        # ecmwf forecast result
+        realtsPredict = pd.Series(
+            ts_ec_result_multi, index=ts_ari_result.index)
+        # print(realtsPredict)
+        Outhead = [" Timeinfo, WindSpeed10m"]
+        filename = 'arima_out_wind' + year2 + month2+'_' + outname + '.csv'
+        filenameout = os.path.join(outpath, filename)
+        realtsPredict.to_csv(filenameout, index=True,
+                             header=Outhead, encoding='utf-8')
+
+        if obsAfter2020:
+            print("usinging obs after 2020 to train arima")
+        else:
+            print("usinging obs before and after 2020 to train arima")
+        if updateEc:
+            print("ecmwf csv replacing")
+            updateECcsv()
+            print("ecmwf csv update completed")
+    else:
+        print("no output arima train result, just watch pics")
 
 
 if __name__ == '__main__':
@@ -470,7 +545,10 @@ if __name__ == '__main__':
     # main(outname="huadiankushui", year2='2021',wdays=30, fmonth=6)
     # valid Huadiankushui
     # main(outname="NewHuadiankushui", year2='2022', wdays=28, fmonth=2)
-    main()
+    # dyp
+    # updateEc是什么用
+    main(outputCsv=False, updateEc=True,
+         obsAfter2020=True, loadAlpha=True, fixedFile='fixparameters202203_Naomaohu.txt')
     # main(outname="NewHuadiankushui", year2='2022', wdays=31, fmonth=3)
     # main(outname="NewHuadiankushui", year2='2022', wdays=31, fmonth=1)
     # main(outname="NewHuadiankushui", year2='2022', wdays=31, fmonth=7)

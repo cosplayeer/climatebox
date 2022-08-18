@@ -2,12 +2,13 @@ import pandas as pd
 import numpy as np
 from pandas import DataFrame as df
 import os
-from configs import getobsconfig
+from configs import getconfig
 # string = pd.Series(np.random.choice(df.string.values, size=100), name='string')
 
 
 def readinData(inpath='text', outpath='text_split', intervals='60min'):
-    filename = getobsconfig()
+    outname, year2, wdays, fmonth = getconfig()
+    filename = "obs"+outname+"UTC0-6hourly.txt"
     infile = os.path.join(inpath, filename)
     if not os.path.isfile(infile):
         raise IOError("File is not found.")

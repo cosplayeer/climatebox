@@ -5,7 +5,7 @@ import cdsapi
 
 def main():
     monthlists = ['06']
-    for iyear in range(2021, 2022):
+    for iyear in range(2022, 2023):
         # for iyear in range(2020,2021):
         for imonth in monthlists:
             print("downloading " + str(iyear) + str(imonth))

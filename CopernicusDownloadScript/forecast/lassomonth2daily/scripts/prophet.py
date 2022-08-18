@@ -13,59 +13,93 @@ testdataname = "obsNaomaohuUTC0-6hourly.txt"
 realdataname = "obsNaomaohu202208.txt"
 
 
-def readInData(obsname="obsNaomaohu202208.txt", prediction_size=480, freq='6H'):
+def readInData(obstype='OBS', obsname="obsNaomaohu202208.txt", prediction_size=4*30, freq='6H', trainyears=2):
     # real data name
     # realdataname = "obsNaomaohu202208.txt"
     # testdataname
     # obsname = "obsNaomaohuUTC0-6hourly.txt"
+    # 使用过去半年的数据做训练
+    # lastyears = 0.5　1/12 3/12 6/12 1 2 3
     datapath = os.path.join("text", obsname)
     data = pd.read_csv(datapath, sep=',')
-    print(data.info())
+    # print(data.info())
     # print(data.iloc[2296:2300])
     data = data.dropna()
     # 处理数据
-    data['Date/Time'] = pd.to_datetime(data['Date/Time'])
-    cols_to_drop = ['Direction_70m']
-    data = data.drop(cols_to_drop, axis=1)
-    # print(data.info())
+    if obstype == 'OBS':
+        data['Date/Time'] = pd.to_datetime(data['Date/Time'])
+        cols_to_drop = ['Direction_70m']
+        data = data.drop(cols_to_drop, axis=1)
+        # print(data.info())
+    if obstype == 'FNLrea':
+        data['TimeInfo'] = pd.to_datetime(data['TimeInfo'])  # ,
+        #   format='%Y-%m-%d')
+        cols_to_drop = ['WindDirection10m', 'WindSpeed80m', 'WindDirection80m', 'WindSpeed100m',
+                        'WindDirection100m', 'Pressure80m', 'Temperature100m', 'RelativeHumidity2m']
+        data = data.drop(cols_to_drop, axis=1)
+        # print(data.info())
+        # print(data.info())
+    if obstype == 'ERA5':
+        data['TimeInfo'] = pd.to_datetime(data['TimeInfo'])  # ,
+        #   format='%Y-%m-%d')
+        cols_to_drop = ['WindDirection100m']
+        data = data.drop(cols_to_drop, axis=1)
+    # 如果传参是ｅｃｍ预报，不做模型训练，只读入数据
+    if obstype == 'ECMforecast':
+        data['TimeInfo'] = pd.to_datetime(data['TimeInfo'])
+        cols_to_drop = ['WindDirection10m',
+                        'Temperature2m', 'Pressure10m', 'Airdensity']
+        data = data.drop(cols_to_drop, axis=1)
+        df = data.reset_index(drop=True)  # 使用drop参数来避免将旧索引添加为列
+        df.columns = ['ds', 'yec']
+        df2 = df.set_index(['ds'], drop=True)
+        return df2
     # 载入模型
     logging.getLogger().setLevel(logging.ERROR)
 
-    df = data.reset_index(drop=True)  # 使用drop参数来避免将旧索引添加为列
+    _df = data.reset_index(drop=True)  # 使用drop参数来避免将旧索引添加为列
+    df = _df[int(-prediction_size-trainyears*8760):]
     df.columns = ['ds', 'y']
+
     # 归一化处理
     # df['y'] = (df['y'] - df['y'].mean()) / (df['y'].std())
     # print(df.info())
     # print(df.head())
     # 定义一个训练集。为此将保留最后480个用于预测和验证的条目
     # prediction_size = 480  # 6 hourly, 120 days.
-    train_df = df[:-prediction_size]
+    train_df = df[: -prediction_size]
 
-    m = Prophet(yearly_seasonality=20)  # default 10
+    m = Prophet(yearly_seasonality=10)  # default 10
     # m = Prophet(holidays_prior_scale=0.05) #default 10
     m.fit(train_df)
     future = m.make_future_dataframe(
         periods=prediction_size, freq=freq)
     forecast = m.predict(future)
+    # 将预报变量中小于０的数替换为０，发现相关性还增大了．故注释掉
+    # forecast['yhat'] = np.where(forecast['yhat'] < 0, 0, forecast['yhat'])
     # print(forecast.head())
     return df, forecast, m
 
 
-def output_png(m, forecast, pngname):
+def output_png(m, forecast, pngname, df):
     p1name = os.path.join('pic', 'forecast' + pngname + '.png')
     p2name = os.path.join('pic', 'forecast_components' + pngname + '.png')
     # print(dir(pic1))
-    x1 = forecast['ds']
-    y1 = forecast['yhat']
-    y2 = forecast['yhat_lower']
-    y3 = forecast['yhat_upper']
-    plt.plot(x1, y1)
-    # plt.plot(x1, y2)
-    # plt.plot(x1, y3)
-    plt.xlabel('time')
-    plt.savefig(p1name)
-    # m.plot(forecast).savefig(p1name)
-    # m.plot_components(forecast).savefig(p2name)
+    # x1 = forecast['ds'][:-30]
+    # print(x1)
+    # y1 = forecast['yhat'][:-30]
+    # y2 = forecast['yhat_lower']
+    # y3 = forecast['yhat_upper']
+    # y2 = df['y'][:-30]
+    # plt.plot(x1, y1, color='blue', label='Prophet Predict')
+    # plt.plot(x1, y2, color='red', label='Original')
+    # # plt.plot(x1, y3)
+    # plt.xlabel('time')
+    # plt.ylabel('wind speed (m/s)')
+    # plt.savefig(p1name)
+    p1 = m.plot(forecast)
+    p1.savefig(p1name)
+    m.plot_components(forecast).savefig(p2name)
 
 
 '''
@@ -109,15 +143,42 @@ def make_comparison_dataframe(historical, forecast):
 
 # Define a function to calculate MAPE and MAE
 
+def R_Square(x, y):
+    p1 = x2 = y2 = 0.0
+    # 计算平均值
+    x_ = np.mean(x)
+    y_ = np.mean(y)
+    # 循环读取每个值，计算对应值的累和
+    for i in range(len(x)):
+        p1 += (x[i]-x_)*(y[i]-y_)
+        x2 += (x[i]-x_)**2
+        y2 += (y[i]-y_)**2
+    # print(p1,x2,y2)
+    # 计算相关系数
+    r = p1/((x2 ** 0.5)*(y2 ** 0.5))
+    return r
 
-def calculate_forecast_errors(df, prediction_size):
+
+def err_mean_percent(x, y):
+    return 100 * np.mean(x) / np.mean(y)
+
+
+def calculate_forecast_errors(df, prediction_size, testmonth=1):
 
     df = df.copy()
     df['e'] = df['y'] - df['yhat']
     df['p'] = 100 * df['e'] / df['y']
     df['e2'] = df['e'] * df['e']
+    df['e_p'] = 100 * df['e'] / df['y']
+    # df['e_p_2'] = 100 * np.mean(df['e']) / np.mean(df['y'])
 
-    predicted_part = df[-prediction_size:]
+    test_size_from = -prediction_size + 24 * 30 * (testmonth - 1)
+    test_size_to = -prediction_size + 24 * 30 * testmonth - 1
+    predicted_part = df[test_size_from:test_size_to]
+    # print(predicted_part)
+    r_square = R_Square(predicted_part['y'], predicted_part['yhat'])
+    e_p_2 = err_mean_percent(predicted_part['e'], predicted_part['y'])
+    #r_square_test = R_Square(predicted_part['yhat'], predicted_part['yhat'])
 
     def error_mean(error_name): return np.mean(
         np.abs(predicted_part[error_name]))
@@ -125,32 +186,118 @@ def calculate_forecast_errors(df, prediction_size):
     def error_mean_rmse(error_name): return np.sqrt(np.mean(
         predicted_part[error_name]))
 
-    return {'MAPE': error_mean('p'), 'MAE': error_mean('e'), 'RMSE': error_mean_rmse('e2')}
+    # , 'R_square_test': r_square_test}
+    return {'MAPE': error_mean('p'), 'MAE': error_mean('e'), 'RMSE': error_mean_rmse('e2'), 'R_square': r_square, 'EP': error_mean('e_p'), 'EP2': e_p_2}
 
 
-'''
-# default
+def calculate_forecast_errors_compare_ecmwf(df, df2):
+    # pd.concat axis=1,left-right
+    # 在df2同期的数据，与观测df1做对比，定量输出ｅｃ模式预报点误差
+    df = pd.concat([df.copy().loc[df2.index, :], df2], axis=1)
+    # print("hi:")
+    # print(df)
+    df['e'] = df['y'] - df2['yec']
+    df['p'] = 100 * df['e'] / df['y']
+    df['e2'] = df['e'] * df['e']
+
+    # predicted_part = df[-prediction_size:]
+    predicted_part = df
+
+    def error_mean(error_name): return np.mean(
+        np.abs(predicted_part[error_name]))
+
+    def error_mean_rmse(error_name): return np.sqrt(np.mean(
+        predicted_part[error_name]))
+
+    return {'MAPE ec': error_mean('p'), 'MAE ec': error_mean('e'), 'RMSE ec': error_mean_rmse('e2')}
+
+
+''' FNL forecast prophet vs FNL obs:
+# default=10更好
 MAPE 932.9874079892937
 MAE 2.88242904418861
+
+MAPE 103.59710801143197
+MAE 2.892630418530004
+RMSE 3.701260608496166
+
+ECMWF forecast vs FNL obs:
 # yearly_seasonality=20
 MAPE 752.7537688486976
 MAE 2.9201714078953938
+
+MAPE 119.62815711467756
+MAE 3.362411900782705
+RMSE 4.27910775092178
+
+todo:
+ERA5 forecast prophet vs ERA5 obs
+ECMWF forecast vs ERA5 obs:
+2021年６月对未来６个月的预报
 '''
 
 
-def PrintTheMAPEandMAE(df, forecast, prediction_size):
+def PrintTheMAPEandMAE(df, forecast, prediction_size, testmonth):
     cmp_df = make_comparison_dataframe(df, forecast)
-    for err_name, err_value in calculate_forecast_errors(cmp_df, prediction_size).items():
+    for err_name, err_value in calculate_forecast_errors(cmp_df, prediction_size, testmonth).items():
         print(err_name, err_value)
 
 
-def test6hourly():
-    testdataname = "obsNaomaohuUTC0-6hourly.txt"
-    df, forecast, m = readInData(
-        obsname=testdataname, prediction_size=4*30*1, freq='6H')  # forecast 4 months
-    output_png(m=m, forecast=forecast, pngname=testdataname)
-    output_csv(forecast=forecast, outname=testdataname)
-    PrintTheMAPEandMAE(df=df, forecast=forecast, prediction_size=4*30*1)
+def PrintTheMAPEandMAEwithEC(df, forecast, prediction_size, df2):
+    cmp_df = make_comparison_dataframe(df, forecast)
+    for err_name, err_value in calculate_forecast_errors_compare_ecmwf(cmp_df, df2).items():
+        print(err_name, err_value)
+
+
+def CompareObsPredictionWithObs(i):
+    #testdataname = "obsNaomaohuUTC0-6hourly.txt"
+    # testdataname = "FNL_100.000_39.750_20200101_20220601.csv"
+    testdataname = "ecmwf_ERA5_NewHuadiankushui.csv"
+    _prediction_size = 24 * 30 * 6
+    _freq = 'H'  # '6H'
+    _trainyears = 1/12
+    # _trainyears = 3/12
+    _trainyears = 6/12
+    # _trainyears = 12/12
+    # _trainyears = 24/12
+    # _trainyears = 36/12
+    df, forecast, m = readInData(obstype='ERA5',
+                                 obsname=testdataname, prediction_size=_prediction_size, freq=_freq, trainyears=_trainyears)  # forecast 6 months
+    # output_png(m=m, forecast=forecast, pngname=testdataname, df=df)
+    # output_csv(forecast=forecast, outname=testdataname)
+    PrintTheMAPEandMAE(df=df, forecast=forecast,
+                       prediction_size=_prediction_size, testmonth=int(i))
+
+
+def multiCompareObsPredictionWithObs():
+    for i in range(1, 7):
+        CompareObsPredictionWithObs(i)
+        print('month: %s' % str(i))
+
+
+def Compare6hourlyFNLwithEC():
+    # 读入历史ＦＮＬ
+    testdataname = "FNL_100.000_39.750_20200101_20220601.csv"
+    df, forecast, m = readInData(obstype='FNLrea',
+                                 obsname=testdataname, prediction_size=4*30*2, freq='6H')  # forecast 4 months
+    # 读入ｅｃ的６月预报
+    df2 = readInData(obstype='ECMforecast',
+                     obsname="ecmwf_FNL_202205.csv")  # FNL 是坐标名，实际是ｅｃ六个月的预报
+    # compare df fnl vs ecmwf forecast
+    PrintTheMAPEandMAEwithEC(df=df, forecast=forecast,
+                             prediction_size=4*30*1, df2=df2)
+    # compare df fnl vs fnl forecast
+    # PrintTheMAPEandMAE(df=df, forecast=forecast, prediction_size=4*30*1)
+
+
+def testReadIn():
+    testdataname = "ecmwf_ERA5_NewHuadiankushui.csv"
+    _prediction_size = 24 * 30 * 6
+    _freq = 'H'  # '6H'
+    _trainyears = 6/12
+    df, forecast, m = readInData(obstype='ERA5',
+                                 obsname=testdataname, prediction_size=_prediction_size, freq=_freq, trainyears=_trainyears)
+    print(df)
 
 
 def main():
@@ -166,5 +313,11 @@ def main():
 
 
 if __name__ == '__main__':
-    test6hourly()
+    # testReadIn()
+    # 6hourly FNL
+    # Compare6hourlyFNLwithEC()
+    # 6hourly prophet obs result
+    # CompareObsPredictionWithObs()  #
+    multiCompareObsPredictionWithObs()
+    # hourly obs
     # main()

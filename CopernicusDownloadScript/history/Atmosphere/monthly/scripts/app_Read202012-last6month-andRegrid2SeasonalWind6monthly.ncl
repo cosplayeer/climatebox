@@ -8,9 +8,9 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 ;------------------month May-------------------------------
 
-fromyear = "2021"
-fromonth = "1２"
-fromtime = "20211２"
+fromyear = "2022"
+fromonth = "06"
+fromtime = fromyear + fromonth
 tomonth1="6monthly"
 varname="wind"
 

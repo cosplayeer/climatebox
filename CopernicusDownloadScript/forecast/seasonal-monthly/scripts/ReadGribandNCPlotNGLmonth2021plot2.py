@@ -275,7 +275,6 @@ def plotyear(fname1, fname2, fname3, fname4, fname5, fname6, fname1Era5, fname2E
     panelres.nglPanelLabelBarLabelFontHeightF = 0.015    # Labelbar font height
     panelres.nglPanelLabelBarHeightF = 0.0750  # 0.1750   # Height of labelbar
     panelres.nglPanelLabelBarWidthF = 0.700    # Width of labelbar
-    panelres.nglPanelLjjjx1.
     panelres.lbLabelFont = "helvetica-bold"  # Labelbar font
     panelres.nglPanelTop = 0.955  # 0.935
     panelres.nglPanelFigureStrings = ["1", "2", "3", "4", "5", "6", "G", "H", "I", "J", "K", "L", "M", "N",

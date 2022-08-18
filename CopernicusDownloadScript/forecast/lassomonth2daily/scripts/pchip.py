@@ -1,3 +1,4 @@
+# coding=utf-8
 import math
 import os
 import random
@@ -203,4 +204,11 @@ if __name__ == '__main__':
     #     outpath = "./text1hour/"
     #     interpolate(filename=fname, inpath=ipath,
     #                 outpath=outpath, intervals='60min')
-    pchipfile("ecmwf_NewHuadiankushui_202202_result_shift.csv")
+    # pchipfile("ecmwf_NewHuadiankushui_202208.csv")
+    # pchipfile("ecmwf_Naomaohu_202208.csv")
+    # pchipfile("ecmwf_xinjiangsantanghu1qi_202208.csv")
+    flist = ["test_ecmwf_ECMWF_Naomaohu_20220901_45_pressure.csv",
+             "test_ecmwf_ECMWF_NewHuadiankushui_20220901_26_pressure.csv", "test_ecmwf_ECMWF_xinjiangsantanghu1qi_20220901_45_pressure.csv"]
+    for f in flist:
+        pchipfile(f)
+

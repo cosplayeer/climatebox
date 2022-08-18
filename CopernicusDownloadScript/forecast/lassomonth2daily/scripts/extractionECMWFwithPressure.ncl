@@ -14,26 +14,27 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/contrib/cd_inv_string.ncl"
 ; xo = (/ 109.202914 /)
 ; yo = (/ 37.6528 /)
 
-datatype="NewHuadiankushui" ;OK
-xo = (/ 95.2555 /)
-yo = (/ 42.5754 /)
-;
-datatype="Naomaohu" ;OK
-xo = (/ 94.9144 /)
-yo = (/ 43.6945 /)
+; datatype="NewHuadiankushui" ;OK
+; xo = (/ 95.2555 /)
+; yo = (/ 42.5754 /)
+; ;
+; datatype="Naomaohu" ;OK
+; xo = (/ 94.9144 /)
+; yo = (/ 43.6945 /)
 ; ; ; out of range
 ; datatype="xinjiangsantanghu1qi"
 ; xo = (/ 93.2372 /)
 ; yo = (/ 44.1552 /)
+xo = (/ xlon /)
+yo = (/ ylat /)
 
-
-fromdate="20220701"
-targetmonth="20220901" ; target  =  fromdate add 2 months
-datatype="ECMWF_NewHuadiankushui"
-xo = (/ 95.2555 /)
-yo = (/ 42.5754 /)
-multiWind = 1.98
-mumberId = 26
+; fromdate="20220701"
+; targetmonth="20220901" ; target  =  fromdate add 2 months
+; datatype="ECMWF_NewHuadiankushui"
+; xo = (/ 95.2555 /)
+; yo = (/ 42.5754 /)
+; multiWind = 1.98
+; mumberId = 26
 
 ; datatype="ECMWF_Naomaohu" ;OK
 ; xo = (/ 94.9144 /)
@@ -48,7 +49,7 @@ mumberId = 26
 ; mumberId = 45
 ;FNL---demo end
 fil = "data/Seasonal_2month_daily"+fromdate+"china.grib"
-do i=mumberId,mumberId,1 ; i <=50
+do i=mumberId, mumberId,1 ; i <=50
     a=addfile(fil, "r")
     u10_temp = a->10U_GDS0_SFC
     v10_temp = a->10V_GDS0_SFC
@@ -91,7 +92,7 @@ do i=mumberId,mumberId,1 ; i <=50
     ; ;output csv
 
 
-    outputname = "text/" + "test_ecmwf_" + datatype + "_" + targetmonth + "_"+tostring(i) + "_pressure.csv" 
+    outputname = "text/" + "test_ecmwf_" + datatype + "_" + targetmonth + "_"+tostring(i) + "_pressure2.csv" 
     foutf =  outputname
     ; output header
     if (fileexists(foutf)) then

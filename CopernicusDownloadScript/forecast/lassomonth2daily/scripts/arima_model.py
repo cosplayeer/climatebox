@@ -1894,6 +1894,7 @@ if __name__ == "__main__":
     # simulate arma process
     from statsmodels.tsa.arima_process import arma_generate_sample
     y = arma_generate_sample([1., -.75], [1., .25], nsample=1000)
+    # print(y)
     arma = ARMA(y)
     res = arma.fit(trend='nc', order=(1, 1))
 
