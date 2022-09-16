@@ -335,9 +335,9 @@ def Compare6hourlyFNLwithEC(historyFile, forecastFile):
     df2 = readInData(obstype='ECMforecast',
                      obsname=forecastFile)  # FNL 是坐标名，实际是ｅｃ六个月的预报
     # compare df fnl vs ecmwf forecast
+    # forecast参数没有使用，对比ec forecast 与era5历史同期，未训练prophet模型
     PrintTheMAPEandMAEwithEC(df=df, forecast=forecast,
                              prediction_size=4*30*1, df2=df2)
-    # PrintTheMAPEandMAEwithEC(df=df, prediction_size=4*30*1, df2=df2)
     # compare df fnl vs fnl forecast
     # PrintTheMAPEandMAE(df=df, forecast=forecast, prediction_size=4*30*1)
 
@@ -352,4 +352,4 @@ def multiCompare6hourlyFNLwithEC(n):
 if __name__ == '__main__':
     # 6hourly ERA5
     # Compare6hourlyFNLwithEC()
-    multiCompare6hourlyFNLwithEC(n=5)
+    multiCompare6hourlyFNLwithEC(n=51)

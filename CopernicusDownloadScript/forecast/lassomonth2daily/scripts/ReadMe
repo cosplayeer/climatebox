@@ -36,3 +36,27 @@ scipy == 0.17.0
         output_csv
         output_png
     2.2 update ec merge.
+
+# 改进：高相关性成员的选取　2022/08/18
+1. download_future2month.py:
+    在download.conf中确定好下载的起始时间和结束时间，每次add_month1循环过去两年
+2. extractionECMWF.py
+    main
+    提取51成员，内部调用extractionECMWF.ncl.
+    时间戳为提前两月，如2021年1月的结果，要从2019年11月开始提取
+    提取过过程略慢，提示warning,ok
+3.  lasso_post.py: 
+    获取alpha,最大相关成员id及相关性cor
+    targetmonth是目标月份　fromdate传参要提前两个月
+4.  extractionECMWF.py
+    main2
+    提取相关性最大成员,内部调用extractionECMWFwithPressure.ncl.
+    将最大相关性成员提取至text,增加多变量
+5.  mergeECMWFwithPressure.py
+    将最大相关性成员拼接起来
+6.  预测成员选择：
+    选择　max_id次数最多的，alpha为对应alpha的平均
+7.  预测成员选择优化：
+    提供max_id次数最多的多组成员
+    提供
+    

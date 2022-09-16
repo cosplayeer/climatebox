@@ -62,11 +62,11 @@ class ExtractionECMWFTask(object):
 class ExtractionECMWFTaskwithPressure(object):
     def get_alpha(self):
         afile = "text/alpha" + self.datatype[6:] + ".txt"
-        print(afile)
+        # print(afile)
         with open(afile, "r") as f:
             s = f.read()
         data_json = json.loads(s)
-        print(dict(data_json))
+        # print(dict(data_json))
         print(self.targetmonth)
         _mumberId = dict(data_json).get(self.targetmonth).get('max_id')
         _multiWind = dict(data_json).get(self.targetmonth).get('alpha')
@@ -111,7 +111,7 @@ class ExtractionECMWFTaskwithPressure(object):
         # 手动删除能不能退出？
 
 
-def main(fromyear=20201101, toyear=20211101, id="ECMWF_xinjiangsantanghu1qi"):
+def main(fromyear=20211101, toyear=20211101, id="ECMWF_xinjiangsantanghu1qi"):
     if id == "ECMWF_xinjiangsantanghu1qi":
         _xlon = 93.2372
         _ylat = 44.1552
@@ -123,7 +123,7 @@ def main(fromyear=20201101, toyear=20211101, id="ECMWF_xinjiangsantanghu1qi"):
         _ylat = 42.5754
 
     i = fromyear
-    while i < toyear:
+    while i <= toyear:
         print(i)
         t1 = ExtractionECMWFTask(fromdate=str(i),
                                  datatype=id, xlon=_xlon, ylat=_ylat)
@@ -143,7 +143,7 @@ def main2(fromyear=20201101, toyear=20211101, id="ECMWF_xinjiangsantanghu1qi"):
         _ylat = 42.5754
 
     i = fromyear
-    while i < toyear:
+    while i <= toyear:
         print(i)
         t1 = ExtractionECMWFTaskwithPressure(fromdate=str(i),
                                              datatype=id, xlon=_xlon, ylat=_ylat)
@@ -157,11 +157,11 @@ if __name__ == '__main__':
     # main2(fromyear=20200301, toyear=20211101, id="ECMWF_Naomaohu")
     # main2(fromyear=20200301, toyear=20211101, id="ECMWF_NewHuadiankushui")
 
-    main2(fromyear=20191101, toyear=20200301, id="ECMWF_Naomaohu")
-    main2(fromyear=20191101, toyear=20200301, id="ECMWF_xinjiangsantanghu1qi")
-    main2(fromyear=20191101, toyear=20200301, id="ECMWF_NewHuadiankushui")
+    main2(fromyear=20211101, toyear=20220601, id="ECMWF_Naomaohu")
+    main2(fromyear=20211101, toyear=20220601, id="ECMWF_xinjiangsantanghu1qi")
+    main2(fromyear=20211101, toyear=20220601, id="ECMWF_NewHuadiankushui")
 
     # train
-    # main(fromyear=20200101, toyear=20200301, id="ECMWF_Naomaohu")
-    # main(fromyear=20200101, toyear=20200301, id="ECMWF_xinjiangsantanghu1qi")
-    # main(fromyear=20200101, toyear=20200301, id="ECMWF_NewHuadiankushui")
+    # main(fromyear=20211101, toyear=20211101, id="ECMWF_Naomaohu")
+    # main(fromyear=20211101, toyear=20211101, id="ECMWF_xinjiangsantanghu1qi")
+    # main(fromyear=20211101, toyear=20211101, id="ECMWF_NewHuadiankushui")

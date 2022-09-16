@@ -53,4 +53,4 @@ def processStation(station, targetyear: str):
 if __name__ == '__main__':
     stationList = ["NewHuadiankushui", "xinjiangsantanghu1qi", "Naomaohu"]
     for s in stationList:
-        processStation(s, "2020")
+        processStation(s, "2022")

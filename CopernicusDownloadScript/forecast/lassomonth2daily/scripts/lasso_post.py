@@ -63,10 +63,12 @@ def readin_esemble(station: str, targetmonth):
 def readin_obs(station):
     # station = "NewHuadiankushui"  # "xinjiangsantanghu1qi" #"Naomaohu"
     file_dir = "./text"
-    single_csv = "obs"+station+"UTC0-6hourly.txt"
+    single_csv = "obs"+station+"UTC0-6hourly-202208.txt"
     single_data_frame = pd.read_csv(os.path.join(file_dir, single_csv))
-    single_data_frame.columns = ['TimeInfo', 'spdObs', 'dirObs', 'uname']
-    single_data_frame = single_data_frame.drop(['dirObs', 'uname'], axis=1)
+    single_data_frame.columns = ['TimeInfo', 'spdObs', 'dirObs']
+    # single_data_frame.columns = ['TimeInfo', 'spdObs', 'dirObs', 'uname']
+    single_data_frame = single_data_frame.drop(['dirObs'], axis=1)
+    # single_data_frame = single_data_frame.drop(['dirObs', 'uname'], axis=1)
     single_data_frame['TimeInfo'] = pd.to_datetime(
         single_data_frame['TimeInfo'])
     single_data_frame = single_data_frame.set_index('TimeInfo',
@@ -122,7 +124,7 @@ def printBestMember(station: str, targetmonth: str):
 def processJsonOfStation(station):
     from extractionECMWF import month_add2
     fromdate = 20200101  # tomorrow: 20200101
-    todate = 20211201
+    todate = 20220801
     # station = "NewHuadiankushui"
     # station = "xinjiangsantanghu1qi"
     # station = "Naomaohu"
@@ -130,6 +132,7 @@ def processJsonOfStation(station):
     i = fromdate
     result = dict()
     while i <= todate:
+        print(i)
         temp = printBestMember(station=station, targetmonth=str(i))
         result.update(temp)
         i = int(month_add2(str(i), months=1))
