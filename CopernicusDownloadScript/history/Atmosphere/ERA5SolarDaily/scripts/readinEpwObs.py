@@ -5,6 +5,13 @@ from datetime import datetime, timedelta
 from pyepw.epw import EPW
 
 
+def file_filter(f):
+    if f[-4:] == '.epw':
+        return True
+    else:
+        return False
+
+
 def Create_df_weather(fname):
 
     # read_ewp_as_link(Link_weather)
@@ -71,24 +78,20 @@ def Create_df_weather(fname):
 
 def convert2csv(fname):
     df, foutname, lat, lon, year = Create_df_weather(fname)
-    foutpath = os.path.join("data", "data_after_process", "EPW", foutname)
-    df.to_csv(foutpath, index=False, sep=",")
-    station = '_'.join(foutname.split('_')[:-2])
-    return {station: {'lat': lat, 'lon': lon, 'year': year}}
-    x = {}
-    if station not in x:
-        x.update()
-    else:
-        print("%s already added " % station)
-    print(x)
+    if year == 2005:
+        foutpath = os.path.join("data", "data_after_process", "EPW", foutname)
+        df.to_csv(foutpath, index=False, sep=",")
+        station = '_'.join(foutname.split('_')[:-2])
+        return {station: {'lat': lat, 'lon': lon, 'year': year}}
 
 
 def test():
     epw = EPW()
-    epw.read(r"epwdata/CHN_Gansu.Yuzhong.529830_CSWD.epw")
+    epw.read(r"data/epwdata/CHN_CQ_Chongqing.Shapingba.575160_CSWD.epw")
     # for wd in epw.weatherdata:
     # print(wd.global_horizontal_radiation)
     print(epw.location.timezone)
+    print(epw.weatherdata[0].year)
 
 
 def main():
@@ -96,15 +99,21 @@ def main():
     x = {}
     frompath = os.path.join("data", "epwdata")
     flist = os.listdir(frompath)
-    print(flist)
+    flist = list(filter(file_filter, flist))
+    # print(flist)
     jsdict = dict()
     for f in flist:
-        tempdict = convert2csv(f)
+        absf = os.path.join("data", "epwdata", f)
+        cmd = 'sed -i "2c DESIGN CONDITIONS,0" '+absf
+        print(cmd)
+        os.system(cmd)
+        if convert2csv(f) is not None:
+            tempdict = convert2csv(f)
         key = list(tempdict.keys())[0]
         # print(key)
-        if key not in x:
+        if key not in x:  # and tempdict[key]["year"] == 2005:
             jsdict.update(tempdict)
-        # print(key in jsdict)
+            # print(key in jsdict)
     with open(os.path.join("text", "location.txt"), "w") as f:
         json.dump(jsdict, f)
 

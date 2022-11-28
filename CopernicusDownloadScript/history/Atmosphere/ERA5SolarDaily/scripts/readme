@@ -1,0 +1,35 @@
+1. 提取readin后的数据在/data目录里
+2.计算月平均值和ＲＭＳＥ的脚本是：
+    readRadMonthly.py
+    ３小时数据需要和１小时原始观测对齐
+
+观测数据均为世界时UTC-0
+
+main.py:
+compare hourly bias and RMSE
+output to monthly and yearly
+
+
+
+--------------------------------------
+1. readinEpwObs.py
+    output text/location.txt
+2. readinERA5andSolarChina.py
+    output 
+3. main2.py
+    output statistics.csv
+        output yearly hourly bias and RMSE
+
+readinERA5andSolarChina.py 
+下载后ｅｐｗ文件应该删掉第二行
+---
+---       ERA5       -------------- }                 {  bias
+---                                 } 1hourly main2 - {  rmse  
+---       SolarChina - linear.py -- }                 {  cor
+result:
+      biasERA5, biasSolarChina
+loc1, 
+loc2,
+      RMSEERA5, RMSESolarChina
+loc1, 
+loc2,
