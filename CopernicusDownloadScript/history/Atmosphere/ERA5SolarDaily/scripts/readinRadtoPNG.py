@@ -25,9 +25,12 @@ def readinObs(fname):
 def readinERA5(fname):
     df = pd.read_csv('text/'+fname,
                      #  index_col=0, usecols=[0, 1, 2, 3],
-                     index_col=0, usecols=[0, 2],
+                     #  index_col=0, usecols=[0, 2],
+                     #  skiprows=1,
+                     #  names=['Timeinfo',  'GHI_ERA5_ssrc']
+                     index_col=0, usecols=[0, 1],
                      skiprows=1,
-                     names=['Timeinfo',  'GHI_ERA5_ssrc'])
+                     names=['Timeinfo',  'GHI_ERA5_ssrd'])
     # names = ['Timeinfo', 'GHI_ERA5_ssrd', 'GHI_ERA5_ssrc', 'GHI_ERA5_ssr'])
     df.index = pd.to_datetime(df.index)
     s = df.loc[(df.index < datetime(endyear, endmonth, endday)) &
@@ -119,12 +122,12 @@ if __name__ == '__main__':
     # f3e = readinCams('CAMSlinuo.csv')
     result1 = pd.concat([f1a,  f1c, f1d], axis=1)
     result1.plot(x_compat=True).get_figure().savefig(
-        'png/x1_dongfang_1h'+pngsuffix+'.png')
+        'png/x1_dongfang_1h'+pngsuffix+'ssrd.png')
 
     result2 = pd.concat([f2a,  f2c, f2d], axis=1)
     result2.plot(x_compat=True).get_figure().savefig(
-        'png/x2_xinmulei_1h'+pngsuffix+'.png')
+        'png/x2_xinmulei_1h'+pngsuffix+'ssrd.png')
 
     result3 = pd.concat([f3a,  f3c, f3d], axis=1)
     result3.plot(x_compat=True).get_figure().savefig(
-        'png/x3_linuo_1h'+pngsuffix+'.png')
+        'png/x3_linuo_1h'+pngsuffix+'ssrd.png')
