@@ -5,6 +5,9 @@ import pandas as pd
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import os
+import math
+import numpy as np
+from sklearn.metrics import r2_score
 
 data_process = os.path.join("data", "data_after_process")
 
@@ -13,6 +16,24 @@ def calculateRMSE(df: pd.DataFrame):
     df.columns = ['x', 'y']
     r = ((df.y - df.x) ** 2).mean() ** .5
     return r
+
+# 计算相关度
+
+
+def computeCorrelation(x, y):
+    xBar = np.mean(x)
+    yBar = np.mean(y)
+    SSR = 0.0
+    varX = 0.0
+    varY = 0.0
+    for i in range(0, len(x)):
+        diffXXbar = x[i] - xBar
+        difYYbar = y[i] - yBar
+        SSR += (diffXXbar * difYYbar)
+        varX += diffXXbar**2
+        varY += difYYbar**2
+    SST = math.sqrt(varX * varY)
+    return SSR/SST
 
 
 class Radiation:
@@ -290,6 +311,9 @@ class Radiation:
         elif self.dtype == 'era5':
             dfRad = self.readinERA5(fname)
             resultERA5 = dfRad['GHI_ERA5_ssrc'].sum() / 1000
+            # for test
+            print('resultObs: %s' % resultObs)
+            print('resultERA5: %s' % resultERA5)
             bias = (resultERA5 - resultObs) / resultObs * 100
         elif self.dtype == 'cams':
             dfRad = self.readinCams(fname)
@@ -300,6 +324,7 @@ class Radiation:
         elif self.dtype == 'SC':
             dfRad = self.readinSC(fname)
             resultSC = dfRad['GHI_SC'].sum() / 1000
+            print('resultSC: %s' % resultSC)
             bias = (resultSC - resultObs)/resultObs * 100
         elif self.dtype == 'Merra2':
             dfRad = self.readinMerra2(fname)
@@ -318,20 +343,22 @@ class Radiation:
 
         _rmse = '{:.2f}'.format(calculateRMSE(df))
         _bias = '%.2f' % bias
-        result = {self.dtype: {'bias': _bias, 'rmse': _rmse}}
+        df = df.dropna(axis=0)
+        # r2 = r2_score(df.iloc[:, 0], df.iloc[:, 1])
+        # _r2 = '%.2f' % r2
+        r = computeCorrelation(df.iloc[:, 0], df.iloc[:, 1])
+        r2_new = '%.2f' % (r*r)
+        # corr_matrix = np.corrcoef(df.iloc[:, 0], df.iloc[:, 1])
+        # corr = corr_matrix[0, 1]
+        # R_sq = '%.2f' % corr**2
+        result = {self.dtype: {'bias': _bias,
+                               'rmse': _rmse,
+                               #    'r2_sklearn': _r2,
+                               #    'r2_numpy': R_sq,
+                               'r2_new': r2_new}}
+
+        # print('bias: %s' % _bias)
         return result
-        # s2 = pd.DataFrame.from_dict(s, orient='index')
-        # if 'ecmwf_radiation' in fname:
-        #     if 'CAMS' in fname2:
-        #         s2.to_csv('text/RMSE_ERA5_CAMS'+fname)
-        #     elif 'cfsv2' in fname2:
-        #         s2.to_csv('text/RMSE_ERA5_CFSV2'+fname)
-        #     else:
-        #         s2.to_csv('text/RMSE'+fname)
-        # if 'CAMS' in fname and 'cfsv2' in fname2:
-        #     s2.to_csv('text/RMSE_CAMS_CFSv2'+fname)
-        # else:
-        #     s2.to_csv('text/RMSE'+fname)
 
 
 if __name__ == '__main__':
@@ -340,7 +367,8 @@ if __name__ == '__main__':
     obslists = os.listdir(obspath)
     result = {}
     for obsname in obslists:
-        # obsname = 'EPW_CHN_Gansu_Yuzhong_529830_CSWD_35.87_104.15.csv'
+        # if obsname == 'EPW_CHN_GD_Heyuan_592930_TMYx_2004-2018_23.8_114.7333.csv':
+        # if obsname == 'EPW_CHN_GZ_Tongzi_576060_CSWD_28.13333_106.8333.csv':
         testERA5 = Radiation(startyear=2005, startmonth=1, startday=1,
                              endyear=2006, endmonth=1, endday=1, dtype='era5')
         # testSC.processSumMonth(fname='ninja_linuo_43.0364_93.6184_uncorrected.csv')
@@ -355,31 +383,41 @@ if __name__ == '__main__':
         key = obsname.split('.csv')[0]
         r = {key: (
             era5dict, scdict)}
-        result.update(r)
-    # print(result['EPW_CHN_HB_Wuhan_574940_CSWD_30.61667_114.1333']
-    #       [0]['era5']['bias'])
-    # 输出 csv
+        # 最简单的就是在这里判断异常的r，
+        # 偏差太大的和负值的都不 update．
+        print(r)
+        if (abs(float(r[key][0]['era5']['bias'])) < 100
+                and abs(float(r[key][1]['SC']['bias'])) < 100):
+            # and abs(float(r[key][0]['era5']['r2'])) > 0
+            #     and abs(float(r[key][1]['SC']['r2'])) > 0):
+            result.update(r)
+        # print(result['EPW_CHN_HB_Wuhan_574940_CSWD_30.61667_114.1333']
+        #       [0]['era5']['bias'])
+    # 输出 csv from json
     import csv
     # with open("text/statistics.txt", "r") as fr:
     #     data = json.load(fr)
     # print(type(data))
     data = result
-    with open(os.path.join("text", "statistics.csv"), "w+") as f:
-        csv_writer = csv.writer(f)
-        count = 0
-        csv_writer.writerow(['stationId', 'biasERA5',
-                            'biasSolarChina', 'rmseERA5', 'rmseSolarChina'])
-        for emp in data:
-            print(emp)
-            csv_writer.writerow([emp, data[emp][0]['era5']['bias'], data[emp]
-                                [1]['SC']['bias'], data[emp][0]['era5']['rmse'], data[emp][1]['SC']['rmse']])
-            # if count == 0:
-            #     print(emp)
-            #     header = emp
-            #     csv_writer.writerow(header)
-            #     count += 1
-            # csv_writer.writerow(data[emp])
-    # test era5 bias
-    # test SolarChina rmse
-    # test era5 correlation
-    # test SolarChina correlation
+    if not data is None:
+        with open(os.path.join("text", "statistics_solarR2_new.csv"), "w+") as f:
+            csv_writer = csv.writer(f)
+            count = 0
+            # csv_writer.writerow(['stationId', 'biasERA5',
+            #                     'biasSolarChina', 'rmseERA5', 'rmseSolarChina', 'r2_sklearnERA5', 'r2_sklearnSolarChina',
+            #                      'r2_numpyERA5', 'r2_numpySolarChina', 'r2ERA5new', 'r2SolarChinanew'])
+            csv_writer.writerow(['stationId', 'lat', 'lon', 'biasERA5',
+                                'biasSolarChina', 'rmseERA5', 'rmseSolarChina', 'r2ERA5', 'r2SolarChina'])
+            for emp in data:
+                # todo:把合格的列名输出到文本
+                print('emp:%s' % emp)
+                csv_writer.writerow(['_'.join(str(emp).split('_')[1:-2]),
+                                    str(emp).split('_')[-2],
+                                    str(emp).split('_')[-1],
+                                    data[emp][0]['era5']['bias'], data[emp][1]['SC']['bias'],
+                                    data[emp][0]['era5']['rmse'], data[emp][1]['SC']['rmse'],
+                                    # data[emp][0]['era5']['r2_sklearn'], data[emp][1]['SC']['r2_sklearn'],
+                                     # data[emp][0]['era5']['r2_numpy'], data[emp][1]['SC']['r2_numpy'],
+                                     data[emp][0]['era5']['r2_new'], data[emp][1]['SC']['r2_new']])
+    else:
+        print("data is None")

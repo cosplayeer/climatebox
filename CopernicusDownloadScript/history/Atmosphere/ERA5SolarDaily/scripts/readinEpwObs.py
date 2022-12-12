@@ -73,6 +73,9 @@ def Create_df_weather(fname):
     order = ['date_time', 'global_horizontal_radiation',
              'direct_normal_radiation']
     data_weather = data_weather[order]
+    # ｔｏｄｏ
+    # 返回更多包含２００５年年份的
+    # 判断２００５年的数据的是否完整
     return data_weather, fout, lat, lon, year[0]
 
 
@@ -83,6 +86,8 @@ def convert2csv(fname):
         df.to_csv(foutpath, index=False, sep=",")
         station = '_'.join(foutname.split('_')[:-2])
         return {station: {'lat': lat, 'lon': lon, 'year': year}}
+    else:
+        return None
 
 
 def test():
@@ -109,11 +114,11 @@ def main():
         os.system(cmd)
         if convert2csv(f) is not None:
             tempdict = convert2csv(f)
-        key = list(tempdict.keys())[0]
-        # print(key)
-        if key not in x:  # and tempdict[key]["year"] == 2005:
-            jsdict.update(tempdict)
-            # print(key in jsdict)
+            key = list(tempdict.keys())[0]
+            # print(key)
+            if key not in x:  # and tempdict[key]["year"] == 2005:
+                jsdict.update(tempdict)
+                # print(key in jsdict)
     with open(os.path.join("text", "location.txt"), "w") as f:
         json.dump(jsdict, f)
 
