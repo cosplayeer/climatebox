@@ -17,6 +17,8 @@ def readin(station, targetyear):
 
     all_csv_list = sorted([f for f in os.listdir(file_dir) if str(
         f).startswith("test_ecmwf_ECMWF_"+station+"_"+str(targetyear))], key=lambda i: int(i.split('_')[-3][:-2]))
+    print(all_csv_list)
+    print('hi')
     for single_csv in all_csv_list:
         single_data_frame = pd.read_csv(os.path.join(file_dir, single_csv))
 
@@ -24,7 +26,7 @@ def readin(station, targetyear):
             single_data_frame['TimeInfo'])
         single_data_frame = single_data_frame.set_index('TimeInfo',
                                                         drop=True)  # 使用drop参数来避免将旧索引添加为列
-        # print(single_data_frame)
+        print(single_data_frame)
         locmonth = single_csv.split(
             '_')[-3][:4]+'-'+single_csv.split('_')[-3][4:6]
         single_data_frame_imonth = single_data_frame.loc[locmonth]

@@ -48,7 +48,9 @@ yo = (/ ylat /)
 ; multiWind = 1.56
 ; mumberId = 45
 ;FNL---demo end
-fil = "data/Seasonal_2month_daily"+fromdate+"china.grib"
+; fil = "data/Seasonal_2month_daily"+fromdate+"china.grib"
+; for 6-month forecast.
+fil = "data/Seasonal_6month_daily"+fromdate+"china.grib"
 do i=mumberId, mumberId,1 ; i <=50
     a=addfile(fil, "r")
     u10_temp = a->10U_GDS0_SFC
@@ -63,12 +65,18 @@ do i=mumberId, mumberId,1 ; i <=50
     ; t = a->forecast_time1(124:248) ;6,12,18,24
 
     ; future 1.5-3 month
-    u10 = u10_temp(i,:248,::-1,:)  ;start slice deep hole.闰月闰年 
-    v10 = v10_temp(i,:248,::-1,:)
-    t2m = t2m_temp(i,:248,::-1,:) - 273.15
-    psfc = psfc_temp(i,:248,::-1,:) / 100
-    t = a->forecast_time1(:248) ;6,12,18,24
-
+    ; u10 = u10_temp(i,:248,::-1,:)  ;start slice deep hole.闰月闰年 
+    ; v10 = v10_temp(i,:248,::-1,:)
+    ; t2m = t2m_temp(i,:248,::-1,:) - 273.15
+    ; psfc = psfc_temp(i,:248,::-1,:) / 100
+    ; t = a->forecast_time1(:248) ;6,12,18,24
+    ; future 4-4 month
+    u10 = u10_temp(i,124:,::-1,:)  ;start slice deep hole.闰月闰年 
+    v10 = v10_temp(i,124:,::-1,:)
+    t2m = t2m_temp(i,124:,::-1,:) - 273.15
+    psfc = psfc_temp(i,124:,::-1,:) / 100
+    t = a->forecast_time1(124:) ;6,12,18,24
+    print(t)
     dtime_map = (/4,2,2/)
     tst_dtime = str_split_by_length(fromdate, dtime_map)
     yyyy = tst_dtime(0)
@@ -91,8 +99,10 @@ do i=mumberId, mumberId,1 ; i <=50
 
     ; ;output csv
 
-
-    outputname = "text/" + "test_ecmwf_" + datatype + "_" + targetmonth + "_"+tostring(i) + "_pressure2.csv" 
+    ; normal run
+    ;outputname = "text/" + "test_ecmwf_" + datatype + "_" + targetmonth + "_"+tostring(i) + "_pressure2.csv" 
+    ; runAll, no apply, for main3
+    outputname = "text_ec_esembles_all/" + "test_ecmwf_" + datatype + "_" + targetmonth + "_"+tostring(i) + "_pressure2.csv" 
     foutf =  outputname
     ; output header
     if (fileexists(foutf)) then

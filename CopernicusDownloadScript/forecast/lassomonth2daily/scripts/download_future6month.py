@@ -40,6 +40,7 @@ def _downloads_seasonal_daily_before2month_onetime(current_dt: datetime, areas: 
             'system': '5',
             'variable': [
                 '10m_u_component_of_wind', '10m_v_component_of_wind', '2m_temperature',
+                'mean_sea_level_pressure',
             ],
             'year': current_dt.year,
             'month': current_dt.month,
@@ -336,7 +337,7 @@ def _downloads_seasonal_daily_before2month_onetime(current_dt: datetime, areas: 
             'format': 'grib',
             'area': areas.split(),
         },
-        os.path.join('data', 'Seasonal_6month_daily' + str(current_dt.strftime('%Y%m%d')) + 'chinanorth.grib'))
+        os.path.join('data', 'Seasonal_6month_daily' + str(current_dt.strftime('%Y%m%d')) + 'china.grib'))
 
 
 def mkdir():
@@ -349,7 +350,7 @@ def mkdir():
 
 def downloads_2month(st_dt: datetime, end_dt: datetime, areas: str):
     current_dt = st_dt
-    while current_dt < end_dt:
+    while current_dt <= end_dt:
         # print("hi:")
         print(current_dt)
         filename = os.path.join('data', 'Seasonal_6month_daily' +
