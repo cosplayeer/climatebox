@@ -97,6 +97,7 @@ def test():
     # print(wd.global_horizontal_radiation)
     print(epw.location.timezone)
     print(epw.weatherdata[0].year)
+    print(dir(epw.weatherdata[0]))
 
 
 def main():
@@ -124,5 +125,5 @@ def main():
 
 
 if __name__ == '__main__':
-    # test()
-    main()
+    test()
+    # main()
